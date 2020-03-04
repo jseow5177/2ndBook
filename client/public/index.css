@@ -1,0 +1,64 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Navigation Bar */
+
+.nav-bar {
+  background-color: #f1f1f1;
+}
+
+.nav-link {
+  color: #000000;
+}
+
+.nav-link h1 {
+  font-size: 35px;
+  padding: 10px 20px;
+  border-right: 3px solid black;
+}
+
+.nav-link h2 {
+  margin-right: 20px;
+}
+
+/* Add Book Form */
+.form-wrapper {
+  margin: 50px 0;
+  padding: 50px;
+  border: 1px solid #ccc;
+  border-radius: 16px;
+}
+
+.form-input {
+  margin: 0 20px;
+}
+
+.submit-form-btn-wrapper {
+  text-align: center;
+}
+
+.submit-form-btn {
+  margin-top: 20px;
+}
+
+.preview-image-wrapper {
+  text-align: center;
+  margin: 0 auto 50px auto;
+}
+
+.preview-image-wrapper img {
+  width: 500px;
+  height: 500px;
+  object-fit: contain;
+}
