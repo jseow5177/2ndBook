@@ -62,3 +62,39 @@ code {
   height: 500px;
   object-fit: contain;
 }
+
+/* Card */
+.card-deck {
+  justify-content: left;
+  padding-bottom: 50px;
+}
+
+.card {
+  width: 20rem;
+  margin: 50px;
+}
+
+.card-image {
+  height: 15rem;
+  object-fit: cover;
+}
+
+.card-subtitle.h6 {
+  line-height: 2;
+}
+
+/* Search function */
+.form-row {
+  width: 100%;
+}
+
+.search-wrapper {
+  margin-top: 30px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.no-results {
+  margin: 50px auto 0 auto;
+}

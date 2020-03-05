@@ -2,11 +2,12 @@ const mongoose = require("mongoose");
 const express = require("express");
 const router = express.Router();
 const multer = require("multer"); // File handling npm package
+const fs = require("fs");
 
 // Store images at ./static/uploads
 const storage = multer.diskStorage({
   destination: function (req, file, callback) {
-    callback(null, './uploads')
+    callback(null, 'uploads/')
   },
   filename: function (req, file, callback) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9); // timestamp
@@ -52,7 +53,7 @@ router.route("/add-book").post(upload.single("image"), (req, res, next) => {
       description: req.body.description,
       genre: req.body.genre,
       image: {
-        data: req.file.path,
+        data: fs.readFileSync(req.file.path),
         contentType: req.file.mimetype
       }
     });

@@ -69,7 +69,7 @@ function AddBook() {
   return (
     <div className="form-wrapper">
       <div className="preview-image-wrapper">
-        <img src={image.preview ? image.preview : "https://via.placeholder.com/400?text=Book+Photo"}/>
+        <img src={image.preview ? image.preview : "https://via.placeholder.com/400?text=Book+Photo"} alt="book-preview"/>
       </div>
 
       <Form onSubmit={submitForm}>

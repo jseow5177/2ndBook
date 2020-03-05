@@ -1,5 +1,3 @@
-*Project still ongoing. Commits will be made consistently.*
-
 # BookShare
 
 A book sharing web app build with the MERN (MondoDB, Express, React, Node) stack!
