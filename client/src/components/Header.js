@@ -1,6 +1,8 @@
 import React from "react";
 import Nav from "react-bootstrap/Nav"; // Single nav element
 import Navbar from "react-bootstrap/Navbar"; // The entire Navbar
+import Button from 'react-bootstrap/Button'
+import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 
 import { Link } from "react-router-dom";
 
@@ -8,10 +10,11 @@ function Header() {
   return (
     <div>
       <header className="App-header">
-        <Navbar className="nav-bar">
+        <Navbar className="nav-bar justify-content-between">
 
           <Navbar.Brand>
             <Link to={"/"} className="nav-link">
+              <LibraryBooksIcon color="secondary"/>
               <h1>Bookstagram</h1>
             </Link>
           </Navbar.Brand>
@@ -19,8 +22,10 @@ function Header() {
           <Nav>
 
             <Nav.Item>
-              <Link to={"/add-book"} className="nav-link">
-                <h2>Add</h2>
+              <Link to={"/add-book"}>
+                <Button variant="danger">
+                  Add
+                </Button>
               </Link>
             </Nav.Item>
 

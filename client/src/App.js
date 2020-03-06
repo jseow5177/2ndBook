@@ -11,17 +11,19 @@ import Browse from "./components/Browse";
 import AddBook from "./components/AddBook";
 import Header from "./components/Header";
 import BookInfo from "./components/BookInfo";
+import EditBook from "./components/EditBook";
 
 function App() {
   return (<Router>
     <div className="App">
-      <Header />
+      <Header/>
       <Container>
         <div className="main-wrapper">
           <Switch>
             <Route exact path="/" component={Browse}/>
             <Route path="/add-book" component={AddBook}/>
-            <Route path="/edit-book/:id" component={BookInfo}/>
+            <Route path="/view-book/:id" component={BookInfo}/>
+            <Route path="/edit-book/:id" component={EditBook}/>
           </Switch>
         </div>
       </Container>

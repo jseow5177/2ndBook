@@ -32,7 +32,7 @@ router.route("/").get((req, res, next) => {
 });
 
 // GET a single Book
-router.route("/edit-book/:id").get((req, res, next) => {
+router.route(["/view-book/:id", "/edit-book/:id"]).get((req, res, next) => {
   Book.findById(req.params.id, (error, foundBook) => {
     if (error) {
       return next(error);
@@ -71,7 +71,7 @@ router.route("/add-book").post(upload.single("image"), (req, res, next) => {
 });
 
 // PUT (update) a single Book
-router.route("/update-book/:id").put(upload.single("image"), (req, res, next) => {
+router.route("/edit-book/:id").put(upload.single("image"), (req, res, next) => {
 
   if (req.file) {
     const updateBook = {
@@ -80,7 +80,7 @@ router.route("/update-book/:id").put(upload.single("image"), (req, res, next) =>
       description: req.body.description,
       genre: req.body.genre,
       image: {
-        data: req.file.path,
+        data: fs.readFileSync(req.file.path),
         contentType: req.file.mimetype
       }
     };

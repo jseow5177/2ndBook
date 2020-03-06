@@ -7,20 +7,17 @@ function Search(props) {
   let placeholder = `Search by ${props.searchBy}`; // Placeholder text for search bar
 
   return(
-    <div className="search-wrapper">
+    <div>
       <Form.Row>
 
-        <Form.Group as={Col}>
-          <Form.Control type="text" placeholder={placeholder} value={props.search} onChange={(event) => props.setSearch(event.target.value)} />
-        </Form.Group>
-
-        <Form.Group as={Col}>
-          <Form.Control as="select" value={props.searchBy} onChange={(event) => props.setSearchBy(event.target.value)}>
+        <Form.Group style={{textAlign: "center"}} as={Col}>
+          <Form.Control className="filter" as="select" value={props.searchBy} onChange={(event) => props.setSearchBy(event.target.value)}>
             <option value="Search by..." disabled>Search by...</option>
             <option value="Name">Name</option>
             <option value="Author">Author</option>
             <option value="Genre">Genre</option>
           </Form.Control>
+          <Form.Control className="search-bar" type="text" placeholder={placeholder} value={props.search} onChange={(event) => props.setSearch(event.target.value)} />
         </Form.Group>
 
       </Form.Row>

@@ -1,6 +1,7 @@
 import React from "react";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
+import { Link } from "react-router-dom";
 
 function BookCard(props) {
 
@@ -19,14 +20,16 @@ function BookCard(props) {
   return (
     <div>
       <Col md="4">
-        <Card className="card">
-          <Card.Img className="card-image" src={renderImage(props.image)} alt="book-image" />
-          <Card.Body>
-            <Card.Title>{props.name}</Card.Title>
-            <Card.Subtitle>By {props.author}</Card.Subtitle>
-            <Card.Text className="card-text">{props.genre}</Card.Text>
-          </Card.Body>
-        </Card>
+        <Link to={"/view-book/" + props.id} style={{color: "inherit", textDecoration: "none"}}>
+          <Card>
+            <Card.Img src={renderImage(props.image)} alt="book-image" />
+            <Card.Body>
+              <Card.Title>{props.name}</Card.Title>
+              <Card.Subtitle>By {props.author}</Card.Subtitle>
+              <Card.Text>{props.genre}</Card.Text>
+            </Card.Body>
+          </Card>
+        </Link>
       </Col>
     </div>
   )

@@ -15,7 +15,9 @@ code {
 /* Navigation Bar */
 
 .nav-bar {
-  background-color: #f1f1f1;
+  background-color: #fff;
+  border-bottom: 1px solid #f1f1f1;
+  position: relative;
 }
 
 .nav-link {
@@ -23,19 +25,25 @@ code {
 }
 
 .nav-link h1 {
-  font-size: 35px;
-  padding: 10px 20px;
-  border-right: 3px solid black;
+  font-size: 1.5rem;
+  display: inline-block;
+  color: #808080;
+  margin-left: 0.5rem;
 }
 
-.nav-link h2 {
-  margin-right: 20px;
+.nav-item {
+  float: right;
 }
+
 
 /* Add Book Form */
+div.container {
+  padding: 0 8rem;
+}
+
 .form-wrapper {
   margin: 50px 0;
-  padding: 50px;
+  padding: 4rem;
   border: 1px solid #ccc;
   border-radius: 16px;
 }
@@ -49,17 +57,17 @@ code {
 }
 
 .submit-form-btn {
-  margin-top: 20px;
+  margin-top: 3rem;
 }
 
 .preview-image-wrapper {
   text-align: center;
-  margin: 0 auto 50px auto;
+  margin: 0 auto 20px auto;
 }
 
 .preview-image-wrapper img {
-  width: 500px;
-  height: 500px;
+  width: 200px;
+  height: 200px;
   object-fit: contain;
 }
 
@@ -70,31 +78,80 @@ code {
 }
 
 .card {
-  width: 20rem;
-  margin: 50px;
+  width: 15rem;
+  padding: 7.5px 15px 7.5px 15px;
+  margin: 1.3rem;
+  transition: box-shadow 0.3s;
+  border: 0 !important;
 }
 
-.card-image {
+.card:hover {
+  box-shadow: 0 0 11px rgba(33,33,33,.2);
+}
+
+.card-img {
   height: 15rem;
   object-fit: cover;
 }
 
-.card-subtitle.h6 {
-  line-height: 2;
+.card-body {
+  padding: 1.25rem 0 0 0 !important;
 }
 
-/* Search function */
+.card-title.h5, .card-subtitle.h6, .card-text {
+  line-height: 1.5;
+  margin: 0 0 0.5rem 0;
+}
+
+/* Search bar */
 .form-row {
   width: 100%;
 }
 
-.search-wrapper {
-  margin-top: 30px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
+.form-group {
+  margin-top: 2.5rem;
+}
+
+.form-control.search-bar {
+  width: 50% !important;
+  display: inline-block;
+}
+
+.form-control.filter {
+  width: 15% !important;
+  display: inline-block;
 }
 
 .no-results {
   margin: 50px auto 0 auto;
+}
+
+/* Book Info */
+.bookinfo-wrapper {
+  margin: 4rem;
+}
+
+.bookinfo-image-wrapper {
+  text-align: center;
+}
+
+.bookinfo-image-wrapper img {
+  width: 15rem;
+}
+
+/* Make button look like a link */
+.read-more {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #069;
+  cursor: pointer;
+}
+
+.read-more:hover {
+  color: #0000EE;
+}
+
+.icon {
+  cursor: pointer;
 }

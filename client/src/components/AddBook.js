@@ -48,6 +48,9 @@ function AddBook() {
     formData.append("description", bookDes);
     formData.append("genre", genre);
     formData.append("image", image.file);
+    formData.append("preview", image.preview);
+
+    console.log(formData);
 
     const config = {
       headers: {"content-type": "multipart/form-data"} // Specify that you are sending form data
@@ -69,7 +72,7 @@ function AddBook() {
   return (
     <div className="form-wrapper">
       <div className="preview-image-wrapper">
-        <img src={image.preview ? image.preview : "https://via.placeholder.com/400?text=Book+Photo"} alt="book-preview"/>
+        <img src={image.preview ? image.preview : "https://mweb-cdn.karousell.com/build/select-photo-a2ee9a0f15cf6a64ff3119c599e31a8d.svg"} alt="book-preview"/>
       </div>
 
       <Form onSubmit={submitForm}>
