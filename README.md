@@ -23,6 +23,7 @@ A book sharing web app built with the MERN (MondoDB, Express, React, Node) stack
 - #### `database` - Holds `db.js` which has the local mongoDB connection
 - #### `models` - Holds all the data models
 - #### `routes` - Holds HTTP to URL path associations for each unique url
+- #### `uploads` - Multer file uploads
 - #### `server.js` - Holds the server code
 - #### `package.json` - Defines npm behaviors and packages for the server
 #### `package.json` - Defines npm behaviors like the scripts defined in the next section of the README
