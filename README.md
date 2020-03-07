@@ -1,50 +1,37 @@
-# BookShare
+# Bookstagram
 
-A book sharing web app build with the MERN (MondoDB, Express, React, Node) stack!
+A book sharing web app built with the MERN (MondoDB, Express, React, Node) stack!
 
 ## Project Demo
 
 ## Getting started
 
 ### Clone the repo
+`git clone https://github.com/jseow5177/Bookstagram.git`</br>
+`cd Bookstagram`
 
 ## File Structure
 
-`client` - Holds the client application
-
-<ul>
-  <li>`public` - Holds the static files</li>
-  <li>
-    `src`
-    <ul>
-      <li>`components` - Holds all the different React components</li>
-      <li>`App.js` - Renders browser routes and different pages</li>
-      <li>`index.js` - Renders the React app by rendering App.js</li>
-    </ul>
-  </li>
-  <li>`package.json` - Defines npm behaviors and packages for the client</li>
-</ul>
-
-`backend` - Holds the server application
-
-<ul>
-  <li>`database` - Holds `db.js` which has the mongoDB uri</li>
-  <li>`models` - Holds all the data models</li>
-  <li>`routes` - Holds HTTP to URL path associations for each unique url</li>
-  <li>`uploads` - Holds file uploads via `Multer`</li>
-  <li>`server.js` - Holds the server code</li>
-  <li>`package.json` - Defines npm behaviors and packages for the server</li>
-</ul>
-
-`package.json` - Defines scripts that are explained in the next section of README
-
-`.gitignore` - Tells git which files to ignore
-
-`README` - This file!
+#### `client` - Holds the client application
+- #### `public` - Holds the static files
+- #### `src`
+    - #### `components` - Holds all the different React components
+    - #### `App.js` - Renders browser routes and different pages
+    - #### `index.js` - Renders the React app by rendering App.js
+- #### `package.json` - Defines npm behaviors and packages for the client
+#### `backend` - Holds the server application
+- #### `database` - Holds `db.js` which has the local mongoDB connection
+- #### `models` - Holds all the data models
+- #### `routes` - Holds HTTP to URL path associations for each unique url
+- #### `server.js` - Holds the server code
+- #### `package.json` - Defines npm behaviors and packages for the server
+#### `package.json` - Defines npm behaviors like the scripts defined in the next section of the README
+#### `.gitignore` - Tells git which files to ignore
+#### `README` - This file!
 
 ## Available Scripts
 
-Please note that any time the server is run in these scripts `nodemon` is used in place of `node` for easier development. You can learn more about `nodemon` [here](https://www.npmjs.com/package/nodemon). <br/>
+Please note that any time the server is run in these scripts `nodemon` is used in place of `node` for easier development.<br/>
 In the root directory, you can run:
 
 ### `npm run install-all`
@@ -92,3 +79,6 @@ You will also see any lint errors in the console.
     </ul>
   </li>
 </ul>
+
+## Next steps
+- Implement a signup/login page for user verification
