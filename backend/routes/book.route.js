@@ -4,7 +4,8 @@ const router = express.Router();
 const multer = require("multer"); // File handling npm package
 const fs = require("fs");
 
-// Store images at ./static/uploads
+// Store files at /uploads
+// Note: Multer will not process any form which is not multipart (multipart/form-data)
 const storage = multer.diskStorage({
   destination: function (req, file, callback) {
     callback(null, 'uploads/')
@@ -38,6 +39,7 @@ router.route(["/view-book/:id", "/edit-book/:id"]).get((req, res, next) => {
       return next(error);
     } else {
       res.status(200).json(foundBook);
+      console.log(foundBook)
     }
   })
 });
@@ -53,7 +55,7 @@ router.route("/add-book").post(upload.single("image"), (req, res, next) => {
       description: req.body.description,
       genre: req.body.genre,
       image: {
-        data: fs.readFileSync(req.file.path),
+        data: fs.readFileSync(req.file.path), // Get buffer data
         contentType: req.file.mimetype
       }
     });
@@ -71,10 +73,12 @@ router.route("/add-book").post(upload.single("image"), (req, res, next) => {
 });
 
 // PUT (update) a single Book
-router.route("/edit-book/:id").put(upload.single("image"), (req, res, next) => {
+router.route("/edit-book/:id").patch(upload.single("image"), (req, res, next) => {
+
+  let updateBook;
 
   if (req.file) {
-    const updateBook = {
+    updateBook = {
       name: req.body.name,
       author: req.body.author,
       description: req.body.description,
@@ -84,18 +88,24 @@ router.route("/edit-book/:id").put(upload.single("image"), (req, res, next) => {
         contentType: req.file.mimetype
       }
     };
-    Book.findByIdAndUpdate(req.params.id, updateBook, (error, updatedBook) => {
-      if (error) {
-        console.log(error);
-        return next(error);
-      } else {
-        res.status(200).json(updatedBook); // Page changes to newly updated page
-        console.log("Book updated successfully!");
-      }
-    })
-  } else {
-    console.log("No file uploaded");
+  } else { // If no new image is uploaded
+    updateBook = {
+      name: req.body.name,
+      author: req.body.author,
+      description: req.body.description,
+      genre: req.body.genre,
+    };
   }
+  // Update changed fields
+  Book.update({_id:req.params.id}, {$set :updateBook}, (error, updatedBook) => {
+    if (error) {
+      console.log(error);
+      return next(error);
+    } else {
+      res.status(200).json(updatedBook); // Page changes to newly updated page
+      console.log("Book updated successfully!");
+    }
+  });
 
 });
 

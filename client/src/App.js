@@ -12,6 +12,7 @@ import AddBook from "./components/AddBook";
 import Header from "./components/Header";
 import BookInfo from "./components/BookInfo";
 import EditBook from "./components/EditBook";
+import NotFound404 from "./components/NotFound404";
 
 function App() {
   return (<Router>
@@ -24,6 +25,7 @@ function App() {
             <Route path="/add-book" component={AddBook}/>
             <Route path="/view-book/:id" component={BookInfo}/>
             <Route path="/edit-book/:id" component={EditBook}/>
+            <Route path="" component={NotFound404} />
           </Switch>
         </div>
       </Container>

@@ -3,6 +3,7 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import axios from "axios";
+import {imagePlaceholder} from "../helper";
 
 function AddBook() {
 
@@ -26,15 +27,12 @@ function AddBook() {
   const changeBookName = (event) => {
     setBookName(event.target.value);
   }
-
   const changeAuthor = (event) => {
     setAuthor(event.target.value);
   }
-
   const changeBookDes = (event) => {
     setBookDes(event.target.value);
   }
-
   const genreSelect = (event) => {
     setGenre(event.target.value);
   }
@@ -67,12 +65,13 @@ function AddBook() {
     setBookDes("");
     setGenre("");
     setImage({});
+
   };
 
   return (
     <div className="form-wrapper">
       <div className="preview-image-wrapper">
-        <img src={image.preview ? image.preview : "https://mweb-cdn.karousell.com/build/select-photo-a2ee9a0f15cf6a64ff3119c599e31a8d.svg"} alt="book-preview"/>
+        <img src={image.preview ? image.preview : imagePlaceholder} alt="book-preview"/>
       </div>
 
       <Form onSubmit={submitForm}>
@@ -101,9 +100,10 @@ function AddBook() {
             <Form.Control as="select" value={genre} onChange={genreSelect} required>
               <option>Choose...</option>
               <option>Fiction</option>
-              <option>Action</option>
+              <option>Non-Fiction</option>
               <option>Thriller</option>
               <option>Business</option>
+              <option>Science</option>
             </Form.Control>
           </Form.Group>
 

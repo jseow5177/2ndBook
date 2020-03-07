@@ -139,8 +139,11 @@ div.container {
   width: 15rem;
 }
 
-/* Make button look like a link */
-.read-more {
+.book-des {
+  white-space: pre-wrap; /* Preverse line breaks from text area */
+}
+
+.read-more { /* Make button look like a link */
   background: none;
   border: none;
   padding: 0;
@@ -154,4 +157,16 @@ div.container {
 
 .icon {
   cursor: pointer;
+  margin: 1rem 1rem 0 1rem;
+  color: #000;
+}
+
+.icon:hover {
+  color: #f50057;
+}
+
+/* Error 404 */
+.page-not-found {
+  margin: 10rem;
+  text-align: center;
 }

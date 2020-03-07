@@ -3,14 +3,20 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import axios from "axios";
+import { renderImage } from "../helper";
+import { useHistory } from 'react-router-dom';
 
 function EditBook(props) {
 
+  const history = useHistory();
   const [bookName, setBookName] = useState("");
   const [author, setAuthor] = useState("");
   const [bookDes, setBookDes] = useState("");
   const [genre, setGenre] = useState("");
+  const [imageBuffer, setImageBuffer] = useState([]);
+  const [imageType, setImageType] = useState("");
   const [image, setImage] = useState({});
+  const [isNewImage, setIsNewImage] = useState(false);
 
   // GET the book
   useEffect(() => {
@@ -22,9 +28,8 @@ function EditBook(props) {
         setAuthor(res.data.author);
         setBookDes(res.data.description);
         setGenre(res.data.genre);
-        setImage({
-          preview: res.data.preview
-        });
+        setImageBuffer(res.data.image.data.data);
+        setImageType(res.data.image.contentType);
       }).catch(error => {
         console.log(error);
       });
@@ -42,22 +47,19 @@ function EditBook(props) {
         preview: URL.createObjectURL(event.target.files[0]), // Link for image preview
         file: event.target.files[0] // File for upload
       })
-      console.log(event.target.files[0]);
+      setIsNewImage(true);
     }
   }
 
   const changeBookName = (event) => {
     setBookName(event.target.value);
   }
-
   const changeAuthor = (event) => {
     setAuthor(event.target.value);
   }
-
   const changeBookDes = (event) => {
     setBookDes(event.target.value);
   }
-
   const genreSelect = (event) => {
     setGenre(event.target.value);
   }
@@ -71,13 +73,12 @@ function EditBook(props) {
     formData.append("description", bookDes);
     formData.append("genre", genre);
     formData.append("image", image.file);
-    formData.append("preview", image.preview);
 
     const config = {
       headers: {"content-type": "multipart/form-data"} // Specify that you are sending form data
     }
 
-    axios.put("http://localhost:4000/edit-book/" + props.match.params.id, formData, config).then(response => {
+    axios.patch("http://localhost:4000/edit-book/" + props.match.params.id, formData, config).then(response => {
       console.log(response.data)
     }).catch(error => {
         console.log(error)
@@ -88,12 +89,15 @@ function EditBook(props) {
     setBookDes("");
     setGenre("");
     setImage({});
+
+    history.goBack();
   };
 
   return (
     <div className="form-wrapper">
       <div className="preview-image-wrapper">
-        <img src={image.preview ? image.preview : "https://mweb-cdn.karousell.com/build/select-photo-a2ee9a0f15cf6a64ff3119c599e31a8d.svg"} alt="book-preview"/>
+        {/* Preview new image or render the Buffer data of old image */}
+        <img src={isNewImage ? image.preview : renderImage(imageBuffer, imageType)} alt="book-preview"/>
       </div>
 
       <Form onSubmit={submitForm}>
@@ -122,9 +126,10 @@ function EditBook(props) {
             <Form.Control as="select" value={genre} onChange={genreSelect} required>
               <option>Choose...</option>
               <option>Fiction</option>
-              <option>Action</option>
+              <option>Non-Fiction</option>
               <option>Thriller</option>
               <option>Business</option>
+              <option>Science</option>
             </Form.Control>
           </Form.Group>
 
