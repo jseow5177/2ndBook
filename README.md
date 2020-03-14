@@ -1,8 +1,9 @@
-# Bookstagram
+# 2ndBook
 
 A book sharing web app built with the MERN (MondoDB, Express, React, Node) stack!
 
 ## Project Demo
+![app-demo](app-demo.gif)
 
 ## Getting started
 
