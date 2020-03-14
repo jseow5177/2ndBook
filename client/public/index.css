@@ -39,6 +39,7 @@ code {
 /* Add Book Form */
 div.container {
   padding: 0 8rem;
+  display: relative;
 }
 
 .form-wrapper {
@@ -112,6 +113,10 @@ div.container {
   margin-top: 2.5rem;
 }
 
+.form-control.search-bar, .form-control.search-bar {
+  margin: 2rem 0 1rem 0;
+}
+
 .form-control.search-bar {
   width: 50% !important;
   display: inline-block;
@@ -169,4 +174,46 @@ div.container {
 .page-not-found {
   margin: 10rem;
   text-align: center;
+}
+
+/* Login and Register */
+.link-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  padding: 0.3rem 2rem 0 0;
+}
+
+.link-btn:focus {
+  outline: none;
+}
+
+.form-group {
+  padding-top: 0.5rem;
+  margin-top: 0;
+}
+
+.login-btn {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.close-btn {
+  float: right;
+  cursor: pointer;
+}
+
+.user-form {
+  position: absolute;
+  z-index: 101;
+  background-color: #fff;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 2rem;
+  margin-top: 5rem;
+  left: 0;
+  right: 0;
+  width: 30rem;
+  border-radius: 16px;
 }
