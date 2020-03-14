@@ -19,17 +19,26 @@ function Login(props) {
     setPassword(event.target.value);
   }
 
+  // Close login form when Escape key is pressed
   const handleEscape = (event) => {
     const ESCAPE_KEY = 27;
     if (event.keyCode === ESCAPE_KEY) {
-      props.setIsVisible(false);
+      props.setLogInFormVisible(false);
     }
   }
 
-  const closeForm = () => {
-    props.setIsVisible(false);
+  // Close login form when Close icon is clicked
+  const closeLogInForm = () => {
+    props.setLogInFormVisible(false);
   }
 
+  const closeLogInOpenRegister = (event) => {
+    event.preventDefault();
+    props.setLogInFormVisible(false);
+    props.setRegisterFormVisible(true);
+  }
+
+  // Listen for keydown events
   useEffect(() => {
     let isSubscribed = true;
 
@@ -41,25 +50,25 @@ function Login(props) {
   });
 
   return(
-    <div style={{visibility: props.isVisible ? "visible" : "hidden"}}>
+    <div style={{visibility: props.isLogInFormVisible ? "visible" : "hidden"}}>
       <Form className="user-form">
         <Tooltip title="close" placement="left">
-          <CloseIcon className="close-btn" onClick={closeForm}/>
+          <CloseIcon className="close-btn" onClick={closeLogInForm}/>
         </Tooltip>
-        <Form.Group controlId="username">
+        <Form.Group controlId="usernameLogin">
           <Form.Label>Username</Form.Label>
           <Form.Control type="text" placeholder="Username" value={username} onChange={changeUsername}/>
         </Form.Group>
-        <Form.Group controlId="password">
+        <Form.Group controlId="passwordLogin">
           <Form.Label>Password</Form.Label>
           <Form.Control type="password" placeholder="Password" value={password} onChange={changePassword}/>
         </Form.Group>
         <Button className="login-btn" variant="success" type="submit">
           Log in
         </Button>
-        <Form.Text style={{textAlign: "center"}}>Don't have an account? Sign up</Form.Text>
+        <Form.Text style={{textAlign: "center"}}>Don't have an account? <button className="link-btn small-link" onClick={closeLogInOpenRegister}>Sign up</button></Form.Text>
       </Form>
-      <div style={props.isVisible ? blurBackground : null}></div>
+      <div style={props.isLogInFormVisible ? blurBackground : null}></div>
     </div>
   )
 }

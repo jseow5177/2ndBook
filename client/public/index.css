@@ -217,3 +217,12 @@ div.container {
   width: 30rem;
   border-radius: 16px;
 }
+
+.small-link {
+  color: #28a745 !important;
+  cursor: pointer
+}
+
+.small-link:hover {
+  color: red;
+}

@@ -4,15 +4,21 @@ import Navbar from "react-bootstrap/Navbar"; // The entire Navbar
 import Button from 'react-bootstrap/Button'
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import Login from "./Login";
+import Register from "./Register";
 
 import { Link } from "react-router-dom";
 
 function Header() {
 
-  const [isVisible, setIsVisible] = useState(false);
+  const [isLogInFormVisible, setLogInFormVisible] = useState(false);
+  const [isRegisterFormVisible, setRegisterFormVisible] = useState(false);
 
-  const showForm = () => {
-    setIsVisible(true);
+  const showLogInForm = () => {
+    setLogInFormVisible(true);
+  }
+
+  const showRegisterForm = () => {
+    setRegisterFormVisible(true);
   }
 
   return (
@@ -29,12 +35,13 @@ function Header() {
 
           <Nav>
             <Nav.Item>
-              <button className="link-btn">Register</button>
+              <Register isRegisterFormVisible={isRegisterFormVisible} setRegisterFormVisible={setRegisterFormVisible} setLogInFormVisible={setLogInFormVisible}/>
+              <button className="link-btn" onClick={showRegisterForm}>Register</button>
             </Nav.Item>
 
             <Nav.Item>
-              <Login isVisible={isVisible} setIsVisible={setIsVisible}/>
-              <button className="link-btn" onClick={showForm}>Login</button>
+              <Login isLogInFormVisible={isLogInFormVisible} setRegisterFormVisible={setRegisterFormVisible} setLogInFormVisible={setLogInFormVisible}/>
+              <button className="link-btn" onClick={showLogInForm}>Login</button>
             </Nav.Item>
 
             <Nav.Item>
