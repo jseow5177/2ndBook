@@ -75,8 +75,8 @@ function BookInfo(props) {
           <h2 style={{display: "inline-block"}}>{bookName}</h2>
           <p>{author} | {genre}</p>
           {/* "Read More" if text longer than 530 */}
-          <p className="book-des">{isMore === "more" ? bookDes.substring(0, 530) : bookDes}</p>
-          {bookDes.length > 530 ? <button className="read-more" onClick={readMore}>Read {isMore}...</button> : null}
+          <p className="book-des">{isMore === "more" ? bookDes.substring(0, 530) + " ..." : bookDes}</p>
+          {bookDes.length > 530 ? <button className="read-more" onClick={readMore}>Read {isMore}</button> : null}
         </Col>
       </Row>
     </div>

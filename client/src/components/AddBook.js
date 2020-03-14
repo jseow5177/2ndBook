@@ -37,7 +37,7 @@ function AddBook() {
     setGenre(event.target.value);
   }
 
-  const submitForm = (event) => {
+  const submitAddBookForm = (event) => {
     event.preventDefault();
 
     const formData = new FormData();
@@ -46,18 +46,16 @@ function AddBook() {
     formData.append("description", bookDes);
     formData.append("genre", genre);
     formData.append("image", image.file);
-    formData.append("preview", image.preview);
-
-    console.log(formData);
+    // formData.append("preview", image.preview);
 
     const config = {
-      headers: {"content-type": "multipart/form-data"} // Specify that you are sending form data
+      headers: {"content-type": "multipart/form-data"} // multipart/form-data if form has file elements
     }
 
-    axios.post("http://localhost:4000/add-book", formData, config).then(response => {
-      console.log(response.data)
+    axios.post("http://localhost:4000/add-book", formData, config).then(res => {
+      console.log(res.data);
     }).catch(error => {
-        console.log(error)
+        console.log(error);
       });
 
     setBookName("");
@@ -74,7 +72,7 @@ function AddBook() {
         <img src={image.preview ? image.preview : imagePlaceholder} alt="book-preview"/>
       </div>
 
-      <Form onSubmit={submitForm}>
+      <Form onSubmit={submitAddBookForm}>
 
         <Form.Row>
           <Form.Group className="form-input" as={Col} controlId="book-name">
