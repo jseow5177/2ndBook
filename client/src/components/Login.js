@@ -2,8 +2,9 @@ import React, { useState, useEffect} from "react";
 
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import Tooltip from '@material-ui/core/Tooltip';
-import CloseIcon from '@material-ui/icons/Close';
+import Tooltip from "@material-ui/core/Tooltip";
+import CloseIcon from "@material-ui/icons/Close";
+import axios from "axios";
 import {blurBackground} from "../customStyles";
 
 function Login(props) {
@@ -38,6 +39,25 @@ function Login(props) {
     props.setRegisterFormVisible(true);
   }
 
+  const submitLoginForm = (event) => {
+    event.preventDefault();
+
+    const formData = {
+      username: username,
+      password: password
+    }
+
+    axios.post("http://localhost:4000/login", formData).then(res => {
+      console.log(res.data);
+    }).catch(error => {
+      console.log(error);
+    });
+
+    setUsername("");
+    setPassword("");
+    props.setLogInFormVisible(false);
+  }
+
   // Listen for keydown events
   useEffect(() => {
     let isSubscribed = true;
@@ -51,7 +71,7 @@ function Login(props) {
 
   return(
     <div style={{visibility: props.isLogInFormVisible ? "visible" : "hidden"}}>
-      <Form className="user-form">
+      <Form className="user-form" onSubmit={submitLoginForm}>
         <Tooltip title="close" placement="left">
           <CloseIcon className="close-btn" onClick={closeLogInForm}/>
         </Tooltip>

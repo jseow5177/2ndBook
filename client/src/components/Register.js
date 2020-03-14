@@ -1,9 +1,9 @@
 import React, { useState, useEffect} from "react";
-
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Tooltip from '@material-ui/core/Tooltip';
 import CloseIcon from '@material-ui/icons/Close';
+import axios from "axios";
 import {blurBackground} from "../customStyles";
 
 function Register(props) {
@@ -43,6 +43,29 @@ function Register(props) {
     props.setRegisterFormVisible(false);
   }
 
+  // New user register
+  const submitRegisterForm = (event) => {
+    event.preventDefault();
+
+    const formData = {
+      username: username,
+      password: password,
+      email: email
+    }
+
+    axios.post("http://localhost:4000/register", formData).then(res => {
+      console.log(res.data)
+    }).catch(error => {
+        console.log(error)
+      });
+
+    setUsername("");
+    setPassword("");
+    setEmail("");
+    props.setRegisterFormVisible(false);
+
+  }
+
   // Listen for keydown events
   useEffect(() => {
     let isSubscribed = true;
@@ -56,7 +79,7 @@ function Register(props) {
 
   return(
     <div style={{visibility: props.isRegisterFormVisible ? "visible" : "hidden"}}>
-      <Form className="user-form">
+      <Form className="user-form" onSubmit={submitRegisterForm}>
         <Tooltip title="close" placement="left">
           <CloseIcon className="close-btn" onClick={closeRegisterForm}/>
         </Tooltip>

@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer"); // File handling npm package
 const fs = require("fs");
+const bookSchema = require("../models/Book");
 
 // Store files at /uploads
 // Note: Multer will not process any form which is not multipart (multipart/form-data)
@@ -19,7 +20,8 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage })
 
 // Books Model
-const Book = require("../models/Book");
+//const Book = require("../models/Book");
+const Book = new mongoose.model('Book', bookSchema);
 
 // GET all Books
 router.route("/").get((req, res, next) => {
