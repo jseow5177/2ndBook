@@ -5,7 +5,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Tooltip from '@material-ui/core/Tooltip';
 import axios from "axios";
-import {renderImage} from "../helper";
+import {renderImage} from "../../helper";
 
 import { Link } from "react-router-dom";
 
@@ -75,7 +75,7 @@ function BookInfo(props) {
           <h2 style={{display: "inline-block"}}>{bookName}</h2>
           <p>{author} | {genre}</p>
           {/* "Read More" if text longer than 530 */}
-          <p className="book-des">{isMore === "more" ? bookDes.substring(0, 530) + " ..." : bookDes}</p>
+          <p className="book-des">{isMore === "more" ? bookDes.substring(0, 530) : bookDes}</p>
           {bookDes.length > 530 ? <button className="read-more" onClick={readMore}>Read {isMore}</button> : null}
         </Col>
       </Row>

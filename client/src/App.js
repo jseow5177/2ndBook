@@ -7,12 +7,14 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 // Components
-import Browse from "./components/Browse";
-import AddBook from "./components/AddBook";
-import Header from "./components/Header";
-import BookInfo from "./components/BookInfo";
-import EditBook from "./components/EditBook";
-import NotFound404 from "./components/NotFound404";
+import Browse from "./components/layout/Browse";
+import AddBook from "./components/book/AddBook";
+import Header from "./components/layout/Header";
+import BookInfo from "./components/layout/BookInfo";
+import EditBook from "./components/book/EditBook";
+import Register from "./components/auth/Register";
+import Login from "./components/auth/Login";
+import NotFound404 from "./components/layout/NotFound404";
 
 function App() {
   return (<Router>
@@ -22,9 +24,11 @@ function App() {
         <div className="main-wrapper">
           <Switch>
             <Route exact path="/" component={Browse}/>
-            <Route path="/add-book" component={AddBook}/>
-            <Route path="/view-book/:id" component={BookInfo}/>
-            <Route path="/edit-book/:id" component={EditBook}/>
+            <Route exact path="/add-book" component={AddBook}/>
+            <Route exact path="/view-book/:id" component={BookInfo}/>
+            <Route exact path="/edit-book/:id" component={EditBook}/>
+            <Route exact path="/register" component={Register}/>
+            <Route exact path="/login" component={Login}/>
             <Route path="" component={NotFound404} />
           </Switch>
         </div>

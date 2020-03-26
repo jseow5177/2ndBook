@@ -182,47 +182,83 @@ div.container {
   border: none;
   padding: 0;
   cursor: pointer;
-  padding: 0.3rem 2rem 0 0;
+  margin: 0.3rem 2rem 0 0;
 }
 
 .link-btn:focus {
   outline: none;
 }
 
-.form-group {
-  padding-top: 0.5rem;
-  margin-top: 0;
+.link-btn a {
+  color: #000;
 }
 
-.login-btn {
-  width: 100%;
-  margin: 1rem 0;
+.link-btn a:hover {
+  color: #000;
+  text-decoration: none;
 }
 
-.close-btn {
-  float: right;
-  cursor: pointer;
+.form-btn-wrapper {
+    width: 100%;
+    text-align: center;
+    margin-top: 2rem;
 }
 
-.user-form {
-  position: absolute;
-  z-index: 101;
-  background-color: #fff;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 2rem;
-  margin-top: 5rem;
-  left: 0;
-  right: 0;
-  width: 30rem;
+.user-form-wrapper {
+  width: 70%;
+  padding: 3rem;
+  margin: 2rem auto;
+  border: 1px solid #ccc;
   border-radius: 16px;
 }
 
+.form-group {
+  padding-top: 0.5rem;
+  margin-top: 0;
+  position: relative;
+}
+
+.user-form-input {
+  border: none !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3) !important;
+}
+
+.user-form-input:focus {
+  box-shadow: none !important;
+}
+
+.form-control {
+  margin-top: 1rem;
+}
+
+.floating-label {
+  position: absolute;
+  pointer-events: none;
+  top: 32px;
+  left: 12px;
+  font-size: 1rem;
+  opacity: 0.8;
+  transition: 0.2s ease all;
+}
+
+.user-form-input:focus ~ .floating-label,
+.form-control:not(:focus):not(:placeholder-shown) ~ .floating-label {
+  opacity: 1;
+  margin-top: -2rem;
+  left: 0;
+  font-size: 0.8rem;
+}
+
 .small-link {
-  color: #28a745 !important;
+  color: #28a745;
   cursor: pointer
 }
 
 .small-link:hover {
-  color: red;
+  color: #218838;
+  text-decoration: none;
+}
+
+.user-form-btn {
+  width: 30%;
 }

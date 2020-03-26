@@ -6,13 +6,10 @@ const passportLocalMongoose = require('passport-local-mongoose');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-  name: String,
+  username: String,
   password: String,
   email: String,
-  books: {
-    type: [bookSchema] // A collection of books by user
-  }
-
+  books: [bookSchema] // A collection of books by user
 });
 
 userSchema.plugin(passportLocalMongoose);

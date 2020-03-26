@@ -3,7 +3,7 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import axios from "axios";
-import { renderImage } from "../helper";
+import { renderImage } from "../../helper";
 import { useHistory } from 'react-router-dom';
 
 function EditBook(props) {

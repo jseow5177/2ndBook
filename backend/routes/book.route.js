@@ -9,10 +9,10 @@ const bookSchema = require("../models/Book");
 // Note: Multer will not process any form which is not multipart (multipart/form-data)
 const storage = multer.diskStorage({
   destination: function (req, file, callback) {
-    callback(null, 'uploads/')
+    callback(null, "uploads/");
   },
   filename: function (req, file, callback) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9); // timestamp
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1E9); // timestamp
     callback(null, file.fieldname + "-" + uniqueSuffix);
   }
 })
@@ -20,11 +20,13 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage })
 
 // Books Model
-//const Book = require("../models/Book");
-const Book = new mongoose.model('Book', bookSchema);
+const Book = new mongoose.model("Book", bookSchema);
+// User Model
+const User = require("../models/User");
 
 // GET all Books
 router.route("/").get((req, res, next) => {
+  console.log(req.session);
   Book.find((error, foundBooks) => {
     if (error) {
       return next(error); // return ends the function
@@ -61,14 +63,34 @@ router.route("/add-book").post(upload.single("image"), (req, res, next) => {
         contentType: req.file.mimetype
       }
     });
-    newBook.save((error, savedBook) => {
+
+    console.log(req.user);
+
+    // Save book under user
+    User.findById(user._id, (error, foundUser) => {
       if (error) {
         return next(error);
       } else {
-        console.log(savedBook);
-        res.status(201).json(savedBook); // New book created
+        foundUser.books.push(newBook);
+        foundUser.save((error, userNewBook) => {
+          if (error) {
+            return next(error);
+          } else {
+            res.status(200).json(userNewBook);
+          }
+        });
       }
-  });
+    });
+
+  // Ignore below
+  //   newBook.save((error, savedBook) => {
+  //     if (error) {
+  //       return next(error);
+  //     } else {
+  //       console.log(savedBook);
+  //       res.status(201).json(savedBook); // New book created
+  //     }
+  // });
 } else {
     console.log("No file uploaded");
   }
