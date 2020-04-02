@@ -262,3 +262,47 @@ div.container {
 .user-form-btn {
   width: 30%;
 }
+
+.error-message {
+  color: #FF0000;
+  font-size: 0.8rem;
+}
+
+/* Profile button */
+.profile-dropdown .btn-primary {
+  background-color: #fff;
+  margin-right: 1rem;
+  padding: 0;
+  border: none;
+}
+
+.profile-dropdown .btn-primary:hover {
+  background-color: #fff;
+  border-color: #fff;
+}
+
+.profile-dropdown .btn-primary:focus {
+  background-color: #fff;
+  border-color: #fff;
+  box-shadow: none;
+}
+
+.profile-dropdown .btn-primary:not(:disabled):not(.disabled).active,
+.profile-dropdown .btn-primary:not(:disabled):not(.disabled):active,
+.show>.btn-primary.dropdown-toggle {
+  background-color: #fff !important;
+  border-color: #fff !important;
+  box-shadow: none !important;
+}
+
+.fa-arrow-down {
+  color: #808080;
+  margin-left: 0.5rem;
+  transform: rotate(0deg);
+  transition: transform 1s linear;
+}
+
+.fa-arrow-down.open{
+  transform: rotate(180deg);
+  transition: transform 1s linear;
+}
