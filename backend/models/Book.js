@@ -11,7 +11,7 @@ const bookSchema = new Schema({
     contentType: String
   }
 }, {
-  collection: 'books'
+  collection: "books"
 });
 
 //module.exports = mongoose.model('Book', bookSchema);
