@@ -1,66 +1,106 @@
-const mongoose = require("mongoose");
 const express = require("express");
+//const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+//const passport = require("passport");
+const keys = require("../config/keys");
+
 const router = express.Router();
-const passport = require("passport");
+
+// User Model
 const User = require("../models/User");
+
+// Input validation
+const validateRegisterInput = require("../validation/register");
+const validateLoginInput = require("../validation/login");
+
+// Register endpoint
+// 1. Get errors and isValid from validateRegisterInput(req.body)
+// 2. If input valid, MongoDB's User.findOne() will check if username already exists
+// 3. If new user, fill in name, email and password and save in database
+// 4. Use bcryptjs to hash password before storing
 
 router.route("/register").post((req, res, next) => {
 
-  const newUser = new User({
-    username: req.body.username,
-    email: req.body.email
+  // Validate input
+  const {errors, isValid} = validateRegisterInput(req.body);
+
+  // If input not valid, send errors back to front end
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
+  // Check if email exists
+  User.findOne({email: req.body.email}).then(user => {
+    if (user) {
+      return res.status(400).json({email: "Email already exists"});
+    } else { // If email doesn't exist
+      const newUser = new User({
+        username: req.body.username,
+        email: req.body.email,
+        password: req.body.password
+      });
+      // Hash password with 10 salt rounds
+      bcrypt.genSalt(10, (error, salt) => {
+        bcrypt.hash(newUser.password, salt, (error, hash) => {
+          if (error) throw (error);
+          newUser.password = hash;
+          newUser.save()
+            .then(user => res.json(user))
+            .catch(error => console.log(error));
+        });
+      });
+    }
   });
 
-  // Register new User with password
-  // Password will be automatically hashed and salted
-  User.register(newUser, req.body.password, (error, user) => {
-    if (error) {
-      next(error);
-    } else {
-      passport.authenticate("local")(req, res, () => {
-        res.status(200).json(req.isAuthenticated());
-      })
-    }
-  })
 });
+
+// Login endpoint
+// 1. Get errors and isValid from validateRegisterInput(req.body)
+// 2. If valid input, MongoDB's User.findOne() will check if username exists
+// 3. If user exists, bcrypt.js will compare the submitted password with the hashed password in the db
+// 4. If passwords match, create jwt_payload (contains username and user id)
+// 5. Sign jwt_paylod with keys.secretOrKey from keys.js
+// 6. If successful, append the token to a Bearer string
 
 router.route("/login").post((req, res, next) => {
 
-  const loggedInUser = new User({
-    username: req.body.username,
-    password: req.body.password
-  });
+  // Validate input
+  const {errors, isValid} = validateLoginInput(req.body);
 
-    passport.authenticate("local", (error, user, failureDetails) => {
-      if (error) {
-        return next(error);
-      }
-      if (!user) {
-        console.log(failureDetails);
-        return;
-      }
-      // Save user in session
-      req.logIn(user, error => {
-        if (error) {
-          return next(error);
+  // If input not valid, send errors back to front end
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
+  const email = req.body.email;
+  const password = req.body.password;
+
+  User.findOne({email: email}).then(user => {
+    // Check if user exists
+    if (!user) {
+      return res.status(404).json({emailNotFound: "Email not found"});
+    }
+
+    // If user exists
+    bcrypt.compare(password, user.password).then(isMatch => {
+      if (isMatch) {
+        const payload = { // Create payload
+          id: user.id,
+          username: user.username
         }
-      console.log(req.session);
-      res.status(200).json(req.isAuthenticated());
+        // Sign payload
+        jwt.sign(payload, keys.secretOrKey, {expiresIn: 31556926}, (error, token) => {
+          res.status(200).json({
+            success: true,
+            token: "Bearer" + token
+          });
+        });
+      } else {
+        return res.status(400).json({passwordIncorrect: "Password incorrect"});
+      }
     });
-  })(req, res, next);
-
-  // req.login(loggedInUser, error => {
-  //   if (error) {
-  //     next(error);
-  //   } else {
-  //     passport.authenticate("local")(req, res, () => {
-  //       console.log(req.session);
-  //       console.log(req.user);
-  //       res.status(200).json(req.isAuthenticated()); // Send login status to Login component
-  //     });
-  //   }
-  // });
-
+  });
 });
 
 module.exports = router;
