@@ -64,33 +64,14 @@ router.route("/add-book").post(upload.single("image"), (req, res, next) => {
       }
     });
 
-    console.log(req.user);
-
-    // Save book under user
-    User.findById(user._id, (error, foundUser) => {
+    newBook.save((error, savedBook) => {
       if (error) {
         return next(error);
       } else {
-        foundUser.books.push(newBook);
-        foundUser.save((error, userNewBook) => {
-          if (error) {
-            return next(error);
-          } else {
-            res.status(200).json(userNewBook);
-          }
-        });
+        console.log(savedBook);
+        res.status(201).json(savedBook); // New book created
       }
-    });
-
-  // Ignore below
-  //   newBook.save((error, savedBook) => {
-  //     if (error) {
-  //       return next(error);
-  //     } else {
-  //       console.log(savedBook);
-  //       res.status(201).json(savedBook); // New book created
-  //     }
-  // });
+  });
 } else {
     console.log("No file uploaded");
   }
