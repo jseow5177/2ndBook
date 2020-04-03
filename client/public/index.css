@@ -295,14 +295,6 @@ div.container {
   box-shadow: none !important;
 }
 
-.fa-arrow-down {
-  color: #808080;
-  margin-left: 0.5rem;
-  transform: rotate(0deg);
-  transition: transform 1s linear;
-}
-
-.fa-arrow-down.open{
-  transform: rotate(180deg);
-  transition: transform 1s linear;
+.drop-down {
+  position: absolute;
 }
