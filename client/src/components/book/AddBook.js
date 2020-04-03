@@ -3,67 +3,51 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 import {imagePlaceholder} from "../../helper";
 
 function AddBook() {
+  let history = useHistory();
 
-  const [bookName, setBookName] = useState("");
-  const [author, setAuthor] = useState("");
-  const [bookDes, setBookDes] = useState("");
-  const [genre, setGenre] = useState("");
+  const [newBook, setNewBook] = useState({
+    bookName: "",
+    author: "",
+    bookDes: "",
+    genre: "",
+  });
   const [image, setImage] = useState({});
 
+  const onBookInputChange = (event) => {
+    setNewBook({...newBook, [event.target.id]: event.target.value});
+  }
+
   const uploadImage = (event) => {
-    if (event.target.files.length === 0) { // When image upload is cancelled
-      setImage({});
-    } else {
+    if (event.target.files.length !== 0) {
       setImage({
         preview: URL.createObjectURL(event.target.files[0]), // Link for image preview
         file: event.target.files[0] // File for upload
-      })
+      });
     }
-  }
-
-  const changeBookName = (event) => {
-    setBookName(event.target.value);
-  }
-  const changeAuthor = (event) => {
-    setAuthor(event.target.value);
-  }
-  const changeBookDes = (event) => {
-    setBookDes(event.target.value);
-  }
-  const genreSelect = (event) => {
-    setGenre(event.target.value);
   }
 
   const submitAddBookForm = (event) => {
     event.preventDefault();
 
+    // When a web client uploads a file to a server, it is generally submitted through a form and encoded as multipart/form-data.
     const formData = new FormData();
-    formData.append("name", bookName); // Append the values with key value pairs
-    formData.append("author", author);
-    formData.append("description", bookDes);
-    formData.append("genre", genre);
+    formData.append("name", newBook.bookName); // Append the values with key value pairs
+    formData.append("author", newBook.author);
+    formData.append("description", newBook.bookDes);
+    formData.append("genre", newBook.genre);
     formData.append("image", image.file);
-    // formData.append("preview", image.preview);
 
-    const config = {
-      headers: {"content-type": "multipart/form-data"} // multipart/form-data if form has file elements
-    }
-
-    axios.post("http://localhost:4000/add-book", formData, config).then(res => {
+    axios.post("http://localhost:4000/add-book", formData).then(res => {
       console.log(res.data);
     }).catch(error => {
-        console.log(error);
+        console.log(error.response.data);
       });
 
-    setBookName("");
-    setAuthor("");
-    setBookDes("");
-    setGenre("");
-    setImage({});
-
+    history.push("/");
   };
 
   return (
@@ -75,27 +59,27 @@ function AddBook() {
       <Form onSubmit={submitAddBookForm}>
 
         <Form.Row>
-          <Form.Group className="form-input" as={Col} controlId="book-name">
+          <Form.Group className="form-input" as={Col}>
             <Form.Label>Name</Form.Label>
-            <Form.Control type="text" value={bookName} placeholder="An Awesome Book!" onChange={changeBookName} required/>
+            <Form.Control id="bookName" type="text" value={newBook.bookName} placeholder="An Awesome Book!" onChange={onBookInputChange} required/>
           </Form.Group>
 
-          <Form.Group className="form-input" as={Col} controlId="book-author">
+          <Form.Group className="form-input" as={Col}>
             <Form.Label>Author</Form.Label>
-            <Form.Control type="text" value={author} placeholder="John Doe" onChange={changeAuthor} required/>
+            <Form.Control id="author" type="text" value={newBook.author} placeholder="John Doe" onChange={onBookInputChange} required/>
           </Form.Group>
         </Form.Row>
 
-        <Form.Group className="form-input" controlId="book-summary">
+        <Form.Group className="form-input">
           <Form.Label>Description</Form.Label>
-          <Form.Control style={{resize: "none"}} as="textarea" rows="5" value={bookDes} placeholder="This is a book about awesome books!" onChange={changeBookDes} required/>
+          <Form.Control id="bookDes" style={{resize: "none"}} as="textarea" rows="5" value={newBook.bookDes} placeholder="This is a book about awesome books!" onChange={onBookInputChange} required/>
         </Form.Group>
 
         <Form.Row>
 
-          <Form.Group className="form-input" as={Col} controlId="book-genre">
+          <Form.Group className="form-input" as={Col}>
             <Form.Label>Genre</Form.Label>
-            <Form.Control as="select" value={genre} onChange={genreSelect} required>
+            <Form.Control id="genre" as="select" value={newBook.genre} onChange={onBookInputChange} required>
               <option>Choose...</option>
               <option>Fiction</option>
               <option>Non-Fiction</option>
