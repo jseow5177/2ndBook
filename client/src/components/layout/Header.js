@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import Dropdown from "react-bootstrap/Dropdown";
+import DropdownButton from "react-bootstrap/DropdownButton";
 import { logoutUser } from "../../actions/authActions";
 
 function Header(props) {
@@ -26,13 +27,10 @@ function Header(props) {
             <Nav.Item>
 
               {props.auth.isAuthenticated ? (
-                <Dropdown className="profile-dropdown">
-                  <Dropdown.Toggle><AccountCircleIcon style={{color: "#808080"}} fontSize="large"/><i id="icon" className="fa fa-arrow-down"></i></Dropdown.Toggle>
-                  <Dropdown.Menu>
-                    <Dropdown.Item>Profile</Dropdown.Item>
-                    <Dropdown.Item as="button" onClick={props.logoutUser}>Logout</Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
+                <DropdownButton alignRight className="profile-dropdown" title={<AccountCircleIcon style={{color: "#808080"}} fontSize="large"/>}>
+                  <Dropdown.Item>Profile</Dropdown.Item>
+                  <Dropdown.Item as="button" onClick={props.logoutUser}>Logout</Dropdown.Item>
+                </DropdownButton>
               ) : null}
 
             </Nav.Item>
