@@ -7,7 +7,7 @@ import { useHistory } from "react-router-dom";
 import {imagePlaceholder} from "../../helper";
 
 function AddBook() {
-  let history = useHistory();
+  const history = useHistory();
 
   const [newBook, setNewBook] = useState({
     bookName: "",
@@ -25,7 +25,7 @@ function AddBook() {
     if (event.target.files.length !== 0) {
       setImage({
         preview: URL.createObjectURL(event.target.files[0]), // Link for image preview
-        file: event.target.files[0] // File for upload
+        file: event.target.files[0] // File to upload to db
       });
     }
   }
@@ -43,11 +43,11 @@ function AddBook() {
 
     axios.post("http://localhost:4000/add-book", formData).then(res => {
       console.log(res.data);
+      history.replace("/");
     }).catch(error => {
         console.log(error.response.data);
       });
 
-    history.push("/");
   };
 
   return (

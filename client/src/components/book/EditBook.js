@@ -9,29 +9,39 @@ import { useHistory } from 'react-router-dom';
 function EditBook(props) {
 
   const history = useHistory();
-  const [bookName, setBookName] = useState("");
-  const [author, setAuthor] = useState("");
-  const [bookDes, setBookDes] = useState("");
-  const [genre, setGenre] = useState("");
-  const [imageBuffer, setImageBuffer] = useState([]);
-  const [imageType, setImageType] = useState("");
+
+  const [oldBook, setOldBook] = useState({
+    bookName: "",
+    author: "",
+    bookDes: "",
+    genre: "",
+    image: {
+      buffer: [],
+      type: ""
+    }
+  });
+
   const [image, setImage] = useState({});
   const [isNewImage, setIsNewImage] = useState(false);
 
-  // GET the book
+  // GET the old book
   useEffect(() => {
     let isSubscribed = true;
 
     if (isSubscribed) {
       axios.get("http://localhost:4000/edit-book/" + props.match.params.id).then(res => {
-        setBookName(res.data.name);
-        setAuthor(res.data.author);
-        setBookDes(res.data.description);
-        setGenre(res.data.genre);
-        setImageBuffer(res.data.image.data.data);
-        setImageType(res.data.image.contentType);
+        setOldBook({
+          bookName: res.data.name,
+          author: res.data.author,
+          bookDes: res.data.description,
+          genre: res.data.genre,
+          image: {
+            buffer: res.data.image.data.data,
+            type: res.data.image.contentType
+          }
+        })
       }).catch(error => {
-        console.log(error);
+        console.log(error.response.data);
       });
     }
 
@@ -39,10 +49,12 @@ function EditBook(props) {
 
   }, [props.match.params.id]);
 
+  const onBookInputChange = (event) => {
+    setOldBook({...oldBook, [event.target.id]: event.target.value});
+  }
+
   const uploadImage = (event) => {
-    if (event.target.files.length === 0) { // When image upload is cancelled
-      setImage({});
-    } else {
+    if (event.target.files.length !== 0) {
       setImage({
         preview: URL.createObjectURL(event.target.files[0]), // Link for image preview
         file: event.target.files[0] // File for upload
@@ -51,44 +63,21 @@ function EditBook(props) {
     }
   }
 
-  const changeBookName = (event) => {
-    setBookName(event.target.value);
-  }
-  const changeAuthor = (event) => {
-    setAuthor(event.target.value);
-  }
-  const changeBookDes = (event) => {
-    setBookDes(event.target.value);
-  }
-  const genreSelect = (event) => {
-    setGenre(event.target.value);
-  }
-
   const submitForm = (event) => {
     event.preventDefault();
 
     const formData = new FormData();
-    formData.append("name", bookName); // Append the values with key value pairs
-    formData.append("author", author);
-    formData.append("description", bookDes);
-    formData.append("genre", genre);
+    formData.append("name", oldBook.bookName);
+    formData.append("author", oldBook.author);
+    formData.append("description", oldBook.bookDes);
+    formData.append("genre", oldBook.genre);
     formData.append("image", image.file);
 
-    const config = {
-      headers: {"content-type": "multipart/form-data"} // Specify that you are sending form data
-    }
-
-    axios.patch("http://localhost:4000/edit-book/" + props.match.params.id, formData, config).then(response => {
+    axios.put("http://localhost:4000/edit-book/" + props.match.params.id, formData).then(response => {
       console.log(response.data)
     }).catch(error => {
         console.log(error)
       });
-
-    setBookName("");
-    setAuthor("");
-    setBookDes("");
-    setGenre("");
-    setImage({});
 
     history.goBack();
   };
@@ -97,33 +86,33 @@ function EditBook(props) {
     <div className="form-wrapper">
       <div className="preview-image-wrapper">
         {/* Preview new image or render the Buffer data of old image */}
-        <img src={isNewImage ? image.preview : renderImage(imageBuffer, imageType)} alt="book-preview"/>
+        <img src={isNewImage ? image.preview : renderImage(oldBook.image.buffer, oldBook.image.type)} alt="book-preview"/>
       </div>
 
       <Form onSubmit={submitForm}>
 
         <Form.Row>
-          <Form.Group className="form-input" as={Col} controlId="book-name">
+          <Form.Group className="form-input" as={Col}>
             <Form.Label>Name</Form.Label>
-            <Form.Control type="text" value={bookName} placeholder="An Awesome Book!" onChange={changeBookName} required/>
+            <Form.Control id="bookName" type="text" value={oldBook.bookName} placeholder="An Awesome Book!" onChange={onBookInputChange} required/>
           </Form.Group>
 
-          <Form.Group className="form-input" as={Col} controlId="book-author">
+          <Form.Group className="form-input" as={Col}>
             <Form.Label>Author</Form.Label>
-            <Form.Control type="text" value={author} placeholder="John Doe" onChange={changeAuthor} required/>
+            <Form.Control id="author" type="text" value={oldBook.author} placeholder="John Doe" onChange={onBookInputChange} required/>
           </Form.Group>
         </Form.Row>
 
-        <Form.Group className="form-input" controlId="book-summary">
+        <Form.Group className="form-input">
           <Form.Label>Description</Form.Label>
-          <Form.Control style={{resize: "none"}} as="textarea" rows="5" value={bookDes} placeholder="This is a book about awesome books!" onChange={changeBookDes} required/>
+          <Form.Control id="bookDes" style={{resize: "none"}} as="textarea" rows="5" value={oldBook.bookDes} placeholder="This is a book about awesome books!" onChange={onBookInputChange} required/>
         </Form.Group>
 
         <Form.Row>
 
-          <Form.Group className="form-input" as={Col} controlId="book-genre">
+          <Form.Group className="form-input" as={Col}>
             <Form.Label>Genre</Form.Label>
-            <Form.Control as="select" value={genre} onChange={genreSelect} required>
+            <Form.Control id="genre" as="select" value={oldBook.genre} onChange={onBookInputChange} required>
               <option>Choose...</option>
               <option>Fiction</option>
               <option>Non-Fiction</option>
@@ -133,7 +122,7 @@ function EditBook(props) {
             </Form.Control>
           </Form.Group>
 
-          <Form.Group className="form-input" as={Col} controlId="book-image">
+          <Form.Group className="form-input" as={Col}>
             <Form.Label>Photo</Form.Label>
             <Form.Control type="file" accept="image/*" onChange={uploadImage} encType="multipart/form-data"  />
           </Form.Group>
