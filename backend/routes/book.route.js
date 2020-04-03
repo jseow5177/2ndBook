@@ -6,58 +6,61 @@ const fs = require("fs");
 const jwt_decode = require("jwt-decode");
 const bookSchema = require("../models/Book");
 
-// Store files at /uploads
-// Note: Multer will not process any form which is not multipart (multipart/form-data)
-// const storage = multer.diskStorage({
-//   destination: function (req, file, callback) {
-//     callback(null, "uploads/");
-//   },
-//   filename: function (req, file, callback) {
-//     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1E9); // timestamp
-//     callback(null, file.fieldname + "-" + uniqueSuffix);
-//   }
-// });
-
-
-const storage = multer.memoryStorage(); // Default option. Store in memory
-const upload = multer({ storage: storage })
-
 // Books Model
 const Book = new mongoose.model("Book", bookSchema);
 // User Model
 const User = require("../models/User");
 
-// GET all Books
-router.route("/").get((req, res, next) => {
-  Book.find((error, foundBooks) => {
-    if (error) {
-      return next(error); // return ends the function
-    } else {
-      res.status(200).json(foundBooks);
+const storage = multer.memoryStorage(); // Default option. Store in memory
+const upload = multer({ storage: storage })
+
+/* Get user middleware */
+async function getUser(req, res, next) {
+
+  let foundUser;
+  const token = req.headers.authorization;
+  const decoded = jwt_decode(token);
+  const userId = decoded.id;
+  try {
+    foundUser = await User.findById(userId);
+    if (foundUser == null) {
+      return res.status(404).json({error: "User not found"}); // NEED TO RENDER 404
     }
-  });
+  } catch(error) {
+    return res.status(500).json({error: error.message});
+  }
+  res.foundUser = foundUser;
+  next();
+}
+
+// GET all Books
+router.route("/").get(getUser, async (req, res) => {
+
+  try {
+    const foundBooks = await Book.find();
+    return res.status(200).json(foundBooks);
+  } catch(error) {
+    return res.status(500).json({error: error.message});
+  }
 
 });
 
 // GET a single Book
-router.route(["/view-book/:id", "/edit-book/:id"]).get((req, res, next) => {
-  Book.findById(req.params.id, (error, foundBook) => {
-    if (error) {
-      return next(error);
-    } else {
-      res.status(200).json(foundBook);
-      console.log(foundBook)
+router.route(["/view-book/:id", "/edit-book/:id"]).get(async (req, res) => {
+
+  try {
+    const foundBook = await Book.findById(req.params.id);
+    if (foundBook == null) {
+      return res.status(404).json({error: "Book not found"}); // NEED TO RENDER 404
     }
-  })
+    return res.status(200).json(foundBook);
+  } catch (error) {
+    return res.status(500).json({error: error.message});
+  }
+
 });
 
-// POST a single Book
-// Accepts a single file. "image" is the fieldname
-router.route("/add-book").post(upload.single("image"), (req, res, next) => {
-
-  const token = req.headers.authorization;
-  const decoded = jwt_decode(token);
-  const userId = decoded.id; // Get user who uploaded the book
+router.route("/add-book").post(getUser, upload.single("image"), async(req, res) => {
 
   const newBook = new Book({
     name: req.body.name,
@@ -70,34 +73,21 @@ router.route("/add-book").post(upload.single("image"), (req, res, next) => {
     }
   });
 
-  User.findById(userId).then(foundUser => {
-    const userBooks = foundUser.books;
-    userBooks.push(newBook);
-    foundUser.save().then(user => res.status(200).json(user)).catch(error => res.status(400).json(error));
-  }).catch(error => {
-    res.status(500).json(error);
-  });
+  res.foundUser.books.push(newBook);
 
-  // User.findById(userId, (error, foundUser) => {
-  //   if (error) {
-  //     res.status(500).json(error);
-  //   } else {
-  //     const userBooks = foundUser.books;
-  //     userBooks.push(newBook);
-  //     foundUser.save((error, savedBook) => {
-  //       if (error) {
-  //         res.status(400).json(error);
-  //       } else {
-  //         res.status(201).json(foundUser);
-  //       }
-  //     });
-  //   }
-  // });
+  try {
+    const updatedUser = await res.foundUser.save();
+    const addedBook = await newBook.save();
+    return res.status(200).json(updatedUser);
+  } catch(error) {
+    return res.status(400).json({error: error.message});
+  }
 
 });
 
+
 // PUT (update) a single Book
-router.route("/edit-book/:id").patch(upload.single("image"), (req, res, next) => {
+router.route("/edit-book/:id").put(upload.single("image"), async (req, res) => {
 
   let updateBook;
 
@@ -108,7 +98,7 @@ router.route("/edit-book/:id").patch(upload.single("image"), (req, res, next) =>
       description: req.body.description,
       genre: req.body.genre,
       image: {
-        data: fs.readFileSync(req.file.path),
+        data: req.file.buffer,
         contentType: req.file.mimetype
       }
     };
@@ -120,29 +110,25 @@ router.route("/edit-book/:id").patch(upload.single("image"), (req, res, next) =>
       genre: req.body.genre,
     };
   }
-  // Update changed fields
-  Book.update({_id:req.params.id}, {$set :updateBook}, (error, updatedBook) => {
-    if (error) {
-      console.log(error);
-      return next(error);
-    } else {
-      res.status(200).json(updatedBook); // Page changes to newly updated page
-      console.log("Book updated successfully!");
-    }
-  });
+
+  try {
+    const updatedBook = await Book.findByIdAndUpdate(req.params.id, updateBook, {new: true});
+    return res.status(200).json(updatedBook);
+  } catch (error) {
+    return res.status(500).json({error: error.message});
+  }
 
 });
 
 // DELETE a single Book
-router.route("/delete-book/:id").delete((req, res, next) => {
+router.route("/delete-book/:id").delete(async (req, res) => {
 
-  Book.findByIdAndRemove(req.params.id, (error, deletedBook) => {
-    if (error) {
-      return next(error);
-    } else {
-      res.status(200).json(deletedBook);
-    }
-  })
+  try {
+    const deletedBook = await Book.findByIdAndRemove(req.params.id);
+    return res.status(204).json(deletedBook);
+  } catch (error) {
+    return res.status(500).json({error: error.message});
+  }
 
 });
 
