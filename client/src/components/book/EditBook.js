@@ -3,7 +3,7 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import axios from "axios";
-import { renderImage } from "../../helper";
+import { renderImage } from "../../helper/image.js";
 import { useHistory } from 'react-router-dom';
 
 function EditBook(props) {
@@ -15,10 +15,8 @@ function EditBook(props) {
     author: "",
     bookDes: "",
     genre: "",
-    image: {
-      buffer: [],
-      type: ""
-    }
+    imageBuffer: [],
+    imageType: ""
   });
 
   const [image, setImage] = useState({});
@@ -29,16 +27,19 @@ function EditBook(props) {
     let isSubscribed = true;
 
     if (isSubscribed) {
-      axios.get("http://localhost:4000/edit-book/" + props.match.params.id).then(res => {
+      axios.get("http://localhost:4000/books/" + props.match.params.id).then(res => {
+
+        if (res.data.permission) {
+          history.replace("/forbidden"); // If user tries to edit books that don't belong to them
+        }
+
         setOldBook({
-          bookName: res.data.name,
-          author: res.data.author,
-          bookDes: res.data.description,
-          genre: res.data.genre,
-          image: {
-            buffer: res.data.image.data.data,
-            type: res.data.image.contentType
-          }
+          bookName: res.data.book.name,
+          author: res.data.book.author,
+          bookDes: res.data.book.description,
+          genre: res.data.book.genre,
+          imageBuffer: res.data.book.image.data.data,
+          imageType: res.data.book.image.contentType
         })
       }).catch(error => {
         console.log(error.response.data);
@@ -47,7 +48,7 @@ function EditBook(props) {
 
     return () => isSubscribed = false;
 
-  }, [props.match.params.id]);
+  }, [props.match.params.id, history]);
 
   const onBookInputChange = (event) => {
     setOldBook({...oldBook, [event.target.id]: event.target.value});
@@ -73,20 +74,19 @@ function EditBook(props) {
     formData.append("genre", oldBook.genre);
     formData.append("image", image.file);
 
-    axios.put("http://localhost:4000/edit-book/" + props.match.params.id, formData).then(response => {
-      console.log(response.data)
+    axios.put("http://localhost:4000/books/edit/" + props.match.params.id, formData).then(res => {
+      console.log(res.data)
+      history.goBack();
     }).catch(error => {
-        console.log(error)
+        console.log(error.response.data);
       });
-
-    history.goBack();
   };
 
   return (
     <div className="form-wrapper">
       <div className="preview-image-wrapper">
         {/* Preview new image or render the Buffer data of old image */}
-        <img src={isNewImage ? image.preview : renderImage(oldBook.image.buffer, oldBook.image.type)} alt="book-preview"/>
+        <img src={isNewImage ? image.preview : renderImage(oldBook.imageBuffer, oldBook.imageType)} alt="book-preview"/>
       </div>
 
       <Form onSubmit={submitForm}>

@@ -30,7 +30,7 @@ require("./config/passport")(passport);
 
 // Routes
 app.use("/", bookRoute);
-app.use("/user", userRoute);
+app.use("/users", userRoute);
 
 // Port
 const port = process.env.PORT || 4000;

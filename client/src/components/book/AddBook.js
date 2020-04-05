@@ -3,10 +3,11 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import axios from "axios";
+import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
-import {imagePlaceholder} from "../../helper";
+import {imagePlaceholder} from "../../helper/image.js";
 
-function AddBook() {
+function AddBook(props) {
   const history = useHistory();
 
   const [newBook, setNewBook] = useState({
@@ -15,7 +16,8 @@ function AddBook() {
     bookDes: "",
     genre: "",
   });
-  const [image, setImage] = useState({});
+
+  const [image, setImage] = useState({}); // To hold new image
 
   const onBookInputChange = (event) => {
     setNewBook({...newBook, [event.target.id]: event.target.value});
@@ -41,9 +43,8 @@ function AddBook() {
     formData.append("genre", newBook.genre);
     formData.append("image", image.file);
 
-    axios.post("http://localhost:4000/add-book", formData).then(res => {
-      console.log(res.data);
-      history.replace("/");
+    axios.post("http://localhost:4000/books/add", formData).then(res => {
+      history.replace(`/users/${props.auth.id}`);
     }).catch(error => {
         console.log(error.response.data);
       });
@@ -105,4 +106,8 @@ function AddBook() {
   )
 }
 
-export default AddBook;
+const mapStateToPros = state => ({
+  auth: state.auth
+});
+
+export default connect(mapStateToPros, null)(AddBook);

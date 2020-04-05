@@ -11,6 +11,7 @@ import DropdownButton from "react-bootstrap/DropdownButton";
 import { logoutUser } from "../../actions/authActions";
 
 function Header(props) {
+
   return (
     <div>
       <header className="App-header">
@@ -28,7 +29,7 @@ function Header(props) {
 
               {props.auth.isAuthenticated ? (
                 <DropdownButton alignRight className="profile-dropdown" title={<AccountCircleIcon style={{color: "#808080"}} fontSize="large"/>}>
-                  <Dropdown.Item>Profile</Dropdown.Item>
+                  <Dropdown.Item href={"/users/" + props.auth.user.id}>Profile</Dropdown.Item>
                   <Dropdown.Item as="button" onClick={props.logoutUser}>Logout</Dropdown.Item>
                 </DropdownButton>
               ) : null}
@@ -36,15 +37,15 @@ function Header(props) {
             </Nav.Item>
 
             <Nav.Item>
-              {!props.auth.isAuthenticated ? <button className="link-btn"><Link to={"/register"}>Register</Link></button> : null}
+              {!props.auth.isAuthenticated ? <button className="link-btn"><Link to={"/users/register"}>Register</Link></button> : null}
             </Nav.Item>
 
             <Nav.Item>
-              {!props.auth.isAuthenticated ? <button className="link-btn"><Link to={"/login"}>Login</Link></button> : null}
+              {!props.auth.isAuthenticated ? <button className="link-btn"><Link to={"/users/login"}>Login</Link></button> : null}
             </Nav.Item>
 
             <Nav.Item>
-              <Link to={"/add-book"}><Button variant="danger">Add Book</Button></Link>
+              <Link to={"/books/add"}><Button variant="danger">Add Book</Button></Link>
             </Nav.Item>
           </Nav>
 

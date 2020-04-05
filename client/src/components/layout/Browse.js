@@ -26,7 +26,7 @@ function Browse() {
         setBooks(res.data);
       }
     }).catch(error => {
-      console.log(error);
+      console.log(error.response.data);
     });
 
     return () => isSubscribed = false;
