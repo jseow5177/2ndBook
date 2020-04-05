@@ -13,8 +13,8 @@ import { GET_ERRORS, SET_CURRENT_USER, USER_LOADING } from "./types";
 
 // Register user
 export const registerUser = (userData, history) => dispatch => {
-  axios.post("/user/register", userData)
-    .then(res => history.push("/login")) // Re-direct to login page
+  axios.post("/users/register", userData)
+    .then(res => history.push("/users/login")) // Re-direct to login page
     .catch(error => dispatch({
       type: GET_ERRORS,
       payload: error.response.data
@@ -23,7 +23,7 @@ export const registerUser = (userData, history) => dispatch => {
 
 // Login and get user token
 export const loginUser = userData => dispatch => {
-  axios.post("/user/login", userData)
+  axios.post("/users/login", userData)
     .then(res => {
       const {token} = res.data;
       window.localStorage.setItem("jwtToken", token); // Store token in browser local storage
@@ -62,6 +62,8 @@ export const logoutUser = () => dispatch => {
   window.localStorage.removeItem("jwtToken");
   // Remove Auth header
   setAuthToken(false);
+  // Redirect to home page
+  window.location.href = "/";
   // Dispatch empty payload to set isAuthenticated to false
   dispatch(setCurrentUser({}));
 }

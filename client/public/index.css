@@ -298,3 +298,13 @@ div.container {
 .drop-down {
   position: absolute;
 }
+
+.profile-dropdown a {
+  color: inherit;
+}
+
+/* Profile section */
+.profile-section {
+  text-align: center;
+  margin: 3rem 0;
+}

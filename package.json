@@ -15,9 +15,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "create-react-app": "^3.4.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "concurrently": "^5.1.0"
   }

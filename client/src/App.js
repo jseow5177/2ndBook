@@ -17,8 +17,10 @@ import BookInfo from "./components/layout/BookInfo";
 import EditBook from "./components/book/EditBook";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
+import UserProfile from "./components/layout/UserProfile";
 import PrivateRoute from "./components/private-route/PrivateRoute";
 import NotFound404 from "./components/layout/NotFound404";
+import Forbidden from "./components/layout/Forbidden";
 
 // Check if a token is present in Local Storage if user revisit website
 if (window.localStorage.jwtToken) {
@@ -35,8 +37,6 @@ if (window.localStorage.jwtToken) {
   if (decoded.exp < currentTime) {
     // Delete auth header. Delete local storage in token
     store.dispatch(logoutUser());
-    // Redirect to login
-    window.location.href = "./login";
   }
 
 }
@@ -50,12 +50,14 @@ function App() {
           <div className="main-wrapper">
             <Switch>
               <Route exact path="/" component={Browse}/>
-              <PrivateRoute exact path="/add-book" component={AddBook}/>
-              <Route exact path="/view-book/:id" component={BookInfo}/>
-              <Route exact path="/edit-book/:id" component={EditBook}/>
-              <Route exact path="/register" component={Register}/>
-              <Route exact path="/login" component={Login}/>
-              <Route path="" component={NotFound404} />
+              <PrivateRoute exact path="/books/add" component={AddBook}/>
+              <Route exact path="/books/:id" component={BookInfo}/>
+              <PrivateRoute exact path="/books/edit/:id" component={EditBook}/>
+              <Route exact path="/users/register" component={Register}/>
+              <Route exact path="/users/login" component={Login}/>
+              <PrivateRoute exact path="/users/:id" component={UserProfile}/>
+              <Route exact path="/forbidden" component={Forbidden} />
+              <Route component={NotFound404} />
             </Switch>
           </div>
         </Container>

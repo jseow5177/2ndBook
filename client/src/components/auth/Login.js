@@ -44,7 +44,7 @@ function Login(props) {
     <div className="user-form-wrapper">
       <Form noValidate onSubmit={submitLoginForm}>
         <h4><b>Login</b> below!</h4>
-        <p>Don't have an account? <Link className="small-link" to={"/register"}>Register</Link> </p>
+        <p>Don't have an account? <Link className="small-link" to={"/users/register"}>Register</Link> </p>
         <Form.Group>
           <Form.Control id="emailLogin" className="user-form-input" type="text" placeholder=" " value={loginForm.emailLogin}  onChange={onLoginInputChange} autoComplete="off"/>
           <span className="floating-label">Email</span>

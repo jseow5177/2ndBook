@@ -49,7 +49,7 @@ function Register(props) {
     <div className="user-form-wrapper">
       <Form noValidate onSubmit={submitRegisterForm}>
         <h4><b>Register</b> below!</h4>
-        <p>Already have an account? <Link className="small-link" to={"/login"}>Login</Link> </p>
+        <p>Already have an account? <Link className="small-link" to={"/users/login"}>Login</Link> </p>
         <Form.Group>
           <Form.Control id="emailRegister" className="user-form-input" type="text" placeholder=" " value={registerForm.emailRegister} error={errors.email} onChange={onRegisterInputChange} autoComplete="off"/>
           <span className="floating-label">Email</span>
