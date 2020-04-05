@@ -1,10 +1,9 @@
 const mongoose = require("mongoose");
 const express = require("express");
 const router = express.Router();
-const multer = require("multer"); // File handling npm package
-const fs = require("fs");
-const jwt_decode = require("jwt-decode");
+const multer = require("multer"); 
 const bookSchema = require("../models/Book");
+const getLoggedinUser = require("../middleware/user.js"); // Get the logged in user 
 
 // Books Model
 const Book = new mongoose.model("Book", bookSchema);
@@ -14,53 +13,67 @@ const User = require("../models/User");
 const storage = multer.memoryStorage(); // Default option. Store in memory
 const upload = multer({ storage: storage })
 
-/* Get user middleware */
-async function getUser(req, res, next) {
-
-  let foundUser;
-  const token = req.headers.authorization;
-  const decoded = jwt_decode(token);
-  const userId = decoded.id;
-  try {
-    foundUser = await User.findById(userId);
-    if (foundUser == null) {
-      return res.status(404).json({error: "User not found"}); // NEED TO RENDER 404
-    }
-  } catch(error) {
-    return res.status(500).json({error: error.message});
-  }
-  res.foundUser = foundUser;
-  next();
-}
-
 // GET all Books
-router.route("/").get(getUser, async (req, res) => {
+// Accessible by all users. Do not require authentication
+router.route("/").get(async (req, res) => {
+
+  let allBooks = [];
 
   try {
-    const foundBooks = await Book.find();
-    return res.status(200).json(foundBooks);
+    const allUsers = await User.find(); 
+    allUsers.map(user => {
+      const userBooks = user.books;
+      allBooks = [...allBooks, ...userBooks];
+    });
+
+    return res.status(200).json(allBooks);
   } catch(error) {
     return res.status(500).json({error: error.message});
   }
 
 });
 
-// GET a single Book
-router.route(["/view-book/:id", "/edit-book/:id"]).get(async (req, res) => {
+// GET the information of a specific book
+// Accessible by all users. Do not require authentication
+router.route("/books/:id").get(getLoggedinUser, async (req, res) => {
+
+  let isForbidden = true;
 
   try {
-    const foundBook = await Book.findById(req.params.id);
-    if (foundBook == null) {
+    const user = await User.findOne({"books._id": req.params.id}); // Find the user with the book
+
+    if(res.loggedinUser !== null && res.loggedinUser.id === user._id.toString()) { // Check if the book belongs to the logged in user
+      isForbidden = false; // This controls whether the user can edit or delete the book
+    }
+
+    const userBooks = user.books;
+    const foundBook = userBooks.find(userBook => {
+      return userBook._id.toString() === req.params.id
+    });
+    if (foundBook === null) {
       return res.status(404).json({error: "Book not found"}); // NEED TO RENDER 404
     }
-    return res.status(200).json(foundBook);
+    return res.status(200).json({
+      book: foundBook,
+      permission: isForbidden
+    });
+
   } catch (error) {
     return res.status(500).json({error: error.message});
   }
 
 });
 
-router.route("/add-book").post(getUser, upload.single("image"), async(req, res) => {
+// GET books of loggedinUser
+// Accessible in profile page by loggedinUser
+router.route("/users/:id").get(getLoggedinUser, (req, res) => {
+  const userBooks = res.loggedinUser.books;
+  return res.status(200).json(userBooks);
+});
+
+// POST book to loggedinUser account
+// Requires authentication. Can only be performed by loggedinUser
+router.route("/books/add").post(getLoggedinUser, upload.single("image"), async(req, res) => {
 
   const newBook = new Book({
     name: req.body.name,
@@ -73,11 +86,10 @@ router.route("/add-book").post(getUser, upload.single("image"), async(req, res) 
     }
   });
 
-  res.foundUser.books.push(newBook);
+  res.loggedinUser.books.push(newBook);
 
   try {
-    const updatedUser = await res.foundUser.save();
-    const addedBook = await newBook.save();
+    const updatedUser = await res.loggedinUser.save(); // Save to User
     return res.status(200).json(updatedUser);
   } catch(error) {
     return res.status(400).json({error: error.message});
@@ -86,46 +98,52 @@ router.route("/add-book").post(getUser, upload.single("image"), async(req, res) 
 });
 
 
-// PUT (update) a single Book
-router.route("/edit-book/:id").put(upload.single("image"), async (req, res) => {
+// PUT (update) book to loggedinUser account
+// Requires authentication. Can only be performed by loggedinUser on his or her books
+router.route("/books/edit/:id").put(getLoggedinUser, upload.single("image"), async (req, res) => {
 
-  let updateBook;
-
-  if (req.file) {
-    updateBook = {
-      name: req.body.name,
-      author: req.body.author,
-      description: req.body.description,
-      genre: req.body.genre,
-      image: {
-        data: req.file.buffer,
-        contentType: req.file.mimetype
-      }
-    };
-  } else { // If no new image is uploaded
-    updateBook = {
-      name: req.body.name,
-      author: req.body.author,
-      description: req.body.description,
-      genre: req.body.genre,
-    };
+  const updateBook = {
+    name: req.body.name,
+    author: req.body.author,
+    description: req.body.description,
+    genre: req.body.genre
   }
 
-  try {
-    const updatedBook = await Book.findByIdAndUpdate(req.params.id, updateBook, {new: true});
-    return res.status(200).json(updatedBook);
-  } catch (error) {
-    return res.status(500).json({error: error.message});
+  if (req.file) { // If there is new image
+    updateBook.image = {
+      data: req.file.buffer,
+      contentType: req.file.mimetype
+    }
   }
+
+  res.loggedinUser.books.forEach((userBook, index) => {
+    if (userBook._id.toString() === req.params.id) {
+      res.loggedinUser.books[index] = {...userBook._doc, ...updateBook};
+    }
+  });
+
+    try {
+      const updatedUser = await res.loggedinUser.save();
+      return res.status(200).json(updatedUser);
+    } catch(error) {
+      return res.status(500).json({error: error.message});
+    }
 
 });
 
 // DELETE a single Book
-router.route("/delete-book/:id").delete(async (req, res) => {
+// Requires authentication. Can only be performed by loggedinUser on his or her books
+router.route("/books/:id").delete(getLoggedinUser, async (req, res) => {
+
+  res.loggedinUser.books.forEach((userBook, index) => {
+    if (userBook._id.toString() === req.params.id) {
+      res.loggedinUser.books.splice(index, 1);
+    }
+  });
 
   try {
-    const deletedBook = await Book.findByIdAndRemove(req.params.id);
-    return res.status(204).json(deletedBook);
+    const updatedUser = await res.loggedinUser.save();
+    return res.status(200).json(updatedUser);
   } catch (error) {
     return res.status(500).json({error: error.message});
   }
