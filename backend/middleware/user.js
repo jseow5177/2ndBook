@@ -11,7 +11,7 @@ async function getLoggedinUser(req, res, next) {
         try {
           loggedinUser = await User.findById(userId);
           if (loggedinUser == null) {
-            return res.status(404).json({error: "User not found"}); // NEED TO RENDER 404
+            return res.status(404).json({error: "User not found"});
           }
         } catch(error) {
           return res.status(500).json({error: error.message});
