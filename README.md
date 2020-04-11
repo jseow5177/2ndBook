@@ -87,8 +87,8 @@ You will also see any lint errors in the console.
 ## App features
 <ol>
   <li>User login, signup and authentication with JSON web token (JWT).</li>
-  <li>CRUD (Create, Read, Update and Delete) operations.</li>
-  <li>A user can view the profile of other users.</li>
+  <li>Users can upload, edit, delete and view books.</li>
+  <li>Users can edit their own profile page and view the profile of others.</li>
 </ol>
 
 ## Next steps
