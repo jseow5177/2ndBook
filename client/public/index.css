@@ -137,7 +137,10 @@ div.container {
 
 /* Book Info */
 .bookinfo-wrapper {
-  margin: 4rem;
+  margin: 4rem 2rem;
+  padding: 3rem;
+  border: 1px solid rgba(128, 128, 128, .3);
+  border-radius: 1rem;
 }
 
 .bookinfo-image-wrapper {
@@ -172,6 +175,10 @@ div.container {
 
 .icon:hover {
   color: #f50057;
+}
+
+.book-owner-wrapper {
+  margin-bottom: 0.2rem;
 }
 
 /* Error 404 */
@@ -341,6 +348,9 @@ div.container {
 .user-profile-form {
   width: 80%;
   margin: 5rem auto;
+  padding: 3rem;
+  border: 1px solid rgba(128, 128, 128, .3);
+  border-radius: 1rem;
 }
 
 .upload-btn-wrapper {
