@@ -1,6 +1,7 @@
 const jwt_decode = require("jwt-decode");
 const User = require("../models/User");
 
+// Get data of user who logged in
 async function getLoggedinUser(req, res, next) {
 
     let loggedinUser;
@@ -10,7 +11,7 @@ async function getLoggedinUser(req, res, next) {
         const userId = decoded.id;
         try {
           loggedinUser = await User.findById(userId);
-          if (loggedinUser == null) {
+          if (!loggedinUser) {
             return res.status(404).json({error: "User not found"});
           }
         } catch(error) {
@@ -24,4 +25,4 @@ async function getLoggedinUser(req, res, next) {
     }
 }
 
-module.exports = getLoggedinUser;
+module.exports = {getLoggedinUser};

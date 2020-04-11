@@ -3,7 +3,8 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer"); 
 const bookSchema = require("../models/Book");
-const getLoggedinUser = require("../middleware/user.js"); // Get the logged in user 
+const {getLoggedinUser} = require("../middleware/user.js"); // Get the logged in user 
+const shuffle = require("../shuffle");
 
 // Books Model
 const Book = new mongoose.model("Book", bookSchema);
@@ -25,6 +26,10 @@ router.route("/").get(async (req, res) => {
       const userBooks = user.books;
       allBooks = [...allBooks, ...userBooks];
     });
+
+    // To not have books of the same users cluttered together
+    // Definitely not the best implementation, but simple enough for this pet project
+    allBooks = shuffle(allBooks);
 
     return res.status(200).json(allBooks);
   } catch(error) {
@@ -66,11 +71,24 @@ router.route("/books/:id").get(getLoggedinUser, async (req, res) => {
 
 // GET books of loggedinUser
 // Accessible in profile page by loggedinUser
-router.route("/users/:id").get(getLoggedinUser, (req, res) => {
+// router.route("/users/:id").get(getLoggedinUser, (req, res) => {
 
-  const userBooks = res.loggedinUser.books;
-  return res.status(200).json(userBooks);
+//   const userBooks = res.loggedinUser.books;
+//   return res.status(200).json(userBooks);
 
+// });
+
+// Retrive data of a user for his/her profile page
+router.route("/users/:id").get(async (req, res) => {
+  try {
+    const foundUser = await User.findById(req.params.id);
+    if (!foundUser) {
+      return res.status(404).json({error: "User not found"});
+    }
+    return res.status(200).json(foundUser);
+  } catch(error) {
+    return res.status(500).json({error: error.message});
+  }
 });
 
 // POST book to loggedinUser account
@@ -151,6 +169,23 @@ router.route("/books/:id").delete(getLoggedinUser, async (req, res) => {
     return res.status(500).json({error: error.message});
   }
 
+});
+
+// Get the owner of the book
+router.route("/books/:id/user").get(async (req, res) => {
+  try {
+    const ownerData = await User.findOne({"books._id": req.params.id});
+    if (!ownerData) {
+      return res.status(404).json({error: "Owner of book not found"});
+    }
+    const bookOwner = {
+      ownerId: ownerData._id,
+      ownerName: ownerData.username
+    }
+    return res.status(200).json(bookOwner);
+  } catch(error) {
+    return res.status(500).json({error: error.message});
+  }
 });
 
 module.exports = router;

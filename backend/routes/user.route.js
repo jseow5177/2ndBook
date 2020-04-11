@@ -9,7 +9,7 @@ const router = express.Router();
 const storage = multer.memoryStorage(); // Default option. Store in memory
 const upload = multer({ storage: storage });
 
-const getLoggedinUser = require("../middleware/user.js"); // Get the logged in user 
+const {getLoggedinUser} = require("../middleware/user.js"); // Get the logged in user 
 
 // User Model
 const User = require("../models/User");
@@ -113,8 +113,16 @@ router.route("/login").post((req, res, next) => {
 });
 
 // Get user profile
-router.route(["/profile/:id", "/edit/:id"]).get(getLoggedinUser, async (req, res) => {
-  return res.status(200).json(res.loggedinUser);
+router.route(["/profile/:id", "/edit/:id"]).get(async (req, res) => {
+  try {
+    const foundUser = await User.findById(req.params.id);
+    if (!foundUser) {
+      return res.status(404).json({error: "User not found"});
+    }
+    return res.status(200).json(foundUser);
+  } catch(error) {
+    return res.status(500).json({error: error.message});
+  }
 });
 
 // PUT (update) user profile

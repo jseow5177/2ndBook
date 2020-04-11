@@ -21,6 +21,7 @@ function EditBook(props) {
 
   const [image, setImage] = useState({});
   const [isNewImage, setIsNewImage] = useState(false);
+  const [somethingChanged, setSomethingChanged] = useState(false);
 
   // GET the old book
   useEffect(() => {
@@ -52,11 +53,13 @@ function EditBook(props) {
   }, [props.match.params.id, history]);
 
   const onBookInputChange = (event) => {
+    setSomethingChanged(true);
     setOldBook({...oldBook, [event.target.id]: event.target.value});
   }
 
   const uploadImage = (event) => {
     if (event.target.files.length !== 0) {
+      setSomethingChanged(true);
       setImage({
         preview: URL.createObjectURL(event.target.files[0]), // Link for image preview
         file: event.target.files[0] // File for upload
@@ -124,13 +127,13 @@ function EditBook(props) {
 
           <Form.Group className="form-input" as={Col}>
             <Form.Label>Photo</Form.Label>
-            <Form.Control type="file" accept="image/*" onChange={uploadImage} encType="multipart/form-data"  />
+            <Form.Control type="file" accept="image/*" title=" " onChange={uploadImage} encType="multipart/form-data"  />
           </Form.Group>
 
         </Form.Row>
 
         <div className="submit-form-btn-wrapper">
-          <Button className="submit-form-btn" variant="primary" size="lg" type="submit">Save Changes</Button>
+          <Button className="submit-form-btn" variant="primary" size="lg" type="submit" disabled={somethingChanged ? null : "True"}>Save Changes</Button>
         </div>
 
       </Form>

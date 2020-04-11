@@ -56,7 +56,7 @@ function App() {
               <Route exact path="/users/register" component={Register}/>
               <Route exact path="/users/login" component={Login}/>
               <PrivateRoute exact path="/users/profile/edit" component={EditProfile}/>
-              <PrivateRoute exact path="/users/profile/:id" component={UserProfile}/>
+              <Route exact path="/users/profile/:id" component={UserProfile}/>
               <Route exact path="/forbidden" component={Forbidden} />
               <Route component={NotFound404} />
             </Switch>

@@ -49,7 +49,6 @@ function Browse() {
             id={book._id} 
             name={book.name} 
             author={book.author}
-            userId={book.userId} 
             description={book.description} 
             genre={book.genre} 
             image={book.image} />)}
