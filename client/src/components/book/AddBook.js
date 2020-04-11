@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 import axios from "axios";
 import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
-import {imagePlaceholder} from "../../helper/image.js";
+import {bookImagePlaceholder} from "../../helper/image.js";
 
 function AddBook(props) {
   const history = useHistory();
@@ -42,9 +42,10 @@ function AddBook(props) {
     formData.append("description", newBook.bookDes);
     formData.append("genre", newBook.genre);
     formData.append("image", image.file);
+    formData.append("userId", props.auth.user.id);
 
     axios.post("http://localhost:4000/books/add", formData).then(res => {
-      history.replace(`/users/${props.auth.id}`);
+      history.replace(`/users/profile/${props.auth.user.id}`);
     }).catch(error => {
         console.log(error.response.data);
       });
@@ -54,7 +55,7 @@ function AddBook(props) {
   return (
     <div className="form-wrapper">
       <div className="preview-image-wrapper">
-        <img src={image.preview ? image.preview : imagePlaceholder} alt="book-preview"/>
+        <img src={image.preview ? image.preview : bookImagePlaceholder} alt="book-preview"/>
       </div>
 
       <Form onSubmit={submitAddBookForm}>
