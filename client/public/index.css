@@ -12,6 +12,10 @@ code {
     monospace;
 }
 
+::-webkit-file-upload-button { 
+  cursor:pointer; 
+}
+
 /* Navigation Bar */
 
 .nav-bar {
@@ -305,6 +309,65 @@ div.container {
 
 /* Profile section */
 .profile-section {
+  margin-top: 3rem;
+}
+
+.profile-name {
+  display: inline-block;
+}
+
+.profile-img-wrapper {
   text-align: center;
-  margin: 3rem 0;
+  margin-bottom: 1rem;
+}
+
+.profile-stats{
+  font-size: 1rem;
+}
+
+.edit-profile-btn {
+  margin-top: 0.5rem;
+}
+
+.user-profile-field {
+  margin-top: 1rem;
+}
+
+.form-control .user-profile-input {
+  outline: none;
+  box-shadow: none;
+}
+
+.user-profile-form {
+  width: 80%;
+  margin: 5rem auto;
+}
+
+.upload-btn-wrapper {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  margin-top: 0.5rem;
+}
+
+.upload-btn-wrapper input[type=file] {
+  font-size: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+}
+
+.profile-image {
+  width: 10rem;
+  height: 10rem;
+}
+
+.profile-submit-btn {
+  margin: 2rem 0 0 5rem;
+}
+
+.max-length-tooltip {
+  position: absolute;
+  color: #FF6347;
 }
