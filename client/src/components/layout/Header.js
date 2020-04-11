@@ -29,7 +29,7 @@ function Header(props) {
 
               {props.auth.isAuthenticated ? (
                 <DropdownButton alignRight className="profile-dropdown" title={<AccountCircleIcon style={{color: "#808080"}} fontSize="large"/>}>
-                  <Dropdown.Item href={"/users/" + props.auth.user.id}>Profile</Dropdown.Item>
+                  <Dropdown.Item href={"/users/profile/" + props.auth.user.id}>Profile</Dropdown.Item>
                   <Dropdown.Item as="button" onClick={props.logoutUser}>Logout</Dropdown.Item>
                 </DropdownButton>
               ) : null}

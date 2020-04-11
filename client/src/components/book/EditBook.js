@@ -27,7 +27,7 @@ function EditBook(props) {
     let isSubscribed = true;
 
     if (isSubscribed) {
-      axios.get("http://localhost:4000/books/" + props.match.params.id).then(res => {
+      axios.get(`http://localhost:4000/books/${props.match.params.id}`).then(res => {
 
         if (res.data.permission) {
           history.replace("/forbidden"); // If user tries to edit books that don't belong to them
@@ -40,7 +40,8 @@ function EditBook(props) {
           genre: res.data.book.genre,
           imageBuffer: res.data.book.image.data.data,
           imageType: res.data.book.image.contentType
-        })
+        });
+        
       }).catch(error => {
         console.log(error.response.data);
       });
@@ -74,8 +75,7 @@ function EditBook(props) {
     formData.append("genre", oldBook.genre);
     formData.append("image", image.file);
 
-    axios.put("http://localhost:4000/books/edit/" + props.match.params.id, formData).then(res => {
-      console.log(res.data)
+    axios.put(`http://localhost:4000/books/edit/${props.match.params.id}`, formData).then(res => {
       history.goBack();
     }).catch(error => {
         console.log(error.response.data);

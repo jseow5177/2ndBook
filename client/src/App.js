@@ -17,7 +17,8 @@ import BookInfo from "./components/layout/BookInfo";
 import EditBook from "./components/book/EditBook";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
-import UserProfile from "./components/layout/UserProfile";
+import UserProfile from "./components/user/UserProfile";
+import EditProfile from "./components/user/EditProfile";
 import PrivateRoute from "./components/private-route/PrivateRoute";
 import NotFound404 from "./components/layout/NotFound404";
 import Forbidden from "./components/layout/Forbidden";
@@ -47,7 +48,6 @@ function App() {
       <Router>
         <Header/>
         <Container>
-          <div className="main-wrapper">
             <Switch>
               <Route exact path="/" component={Browse}/>
               <PrivateRoute exact path="/books/add" component={AddBook}/>
@@ -55,11 +55,11 @@ function App() {
               <PrivateRoute exact path="/books/edit/:id" component={EditBook}/>
               <Route exact path="/users/register" component={Register}/>
               <Route exact path="/users/login" component={Login}/>
-              <PrivateRoute exact path="/users/:id" component={UserProfile}/>
+              <PrivateRoute exact path="/users/profile/edit" component={EditProfile}/>
+              <PrivateRoute exact path="/users/profile/:id" component={UserProfile}/>
               <Route exact path="/forbidden" component={Forbidden} />
               <Route component={NotFound404} />
             </Switch>
-          </div>
         </Container>
     </Router>
   </Provider>

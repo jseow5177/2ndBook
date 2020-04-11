@@ -11,7 +11,7 @@ const Book = new mongoose.model("Book", bookSchema);
 const User = require("../models/User");
 
 const storage = multer.memoryStorage(); // Default option. Store in memory
-const upload = multer({ storage: storage })
+const upload = multer({ storage: storage });
 
 // GET all Books
 // Accessible by all users. Do not require authentication
@@ -67,8 +67,10 @@ router.route("/books/:id").get(getLoggedinUser, async (req, res) => {
 // GET books of loggedinUser
 // Accessible in profile page by loggedinUser
 router.route("/users/:id").get(getLoggedinUser, (req, res) => {
+
   const userBooks = res.loggedinUser.books;
   return res.status(200).json(userBooks);
+
 });
 
 // POST book to loggedinUser account
@@ -80,6 +82,7 @@ router.route("/books/add").post(getLoggedinUser, upload.single("image"), async(r
     author: req.body.author,
     description: req.body.description,
     genre: req.body.genre,
+    userId: req.body.userId,
     image: {
       data: req.file.buffer, // Buffer data in memory
       contentType: req.file.mimetype

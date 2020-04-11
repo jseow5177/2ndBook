@@ -65,8 +65,6 @@ function BookInfo(props) {
     })
   }
 
-  console.log(isForbidden);
-
   return (
     <div className="bookinfo-wrapper">
       <Row>

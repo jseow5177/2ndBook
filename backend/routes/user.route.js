@@ -1,11 +1,15 @@
 const express = require("express");
-//const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-//const passport = require("passport");
 const keys = require("../config/keys");
+const multer = require("multer"); 
 
 const router = express.Router();
+
+const storage = multer.memoryStorage(); // Default option. Store in memory
+const upload = multer({ storage: storage });
+
+const getLoggedinUser = require("../middleware/user.js"); // Get the logged in user 
 
 // User Model
 const User = require("../models/User");
@@ -38,7 +42,12 @@ router.route("/register").post((req, res, next) => {
       const newUser = new User({
         username: req.body.username,
         email: req.body.email,
-        password: req.body.password
+        password: req.body.password,
+        bio: "",
+        image: {
+          data: [],
+          contentType: ""
+        }
       });
       // Hash password with 10 salt rounds
       bcrypt.genSalt(10, (error, salt) => {
@@ -101,6 +110,37 @@ router.route("/login").post((req, res, next) => {
       }
     });
   });
+});
+
+// Get user profile
+router.route(["/profile/:id", "/edit/:id"]).get(getLoggedinUser, async (req, res) => {
+  return res.status(200).json(res.loggedinUser);
+});
+
+// PUT (update) user profile
+router.route("/edit/:id").put(getLoggedinUser, upload.single("image"), async (req, res) => {
+
+  const user = {
+    username: req.body.username,
+    bio: req.body.bio,
+  }
+
+  if (req.file) { // If there is new image
+    user.image = {
+      data: req.file.buffer,
+      contentType: req.file.mimetype
+    }
+  }
+
+  const updateUser = {...res.loggedinUser._doc, ...user}
+
+  try {
+    const updatedUser = await User.updateOne({_id: req.params.id}, updateUser);
+    return res.status(200).json({message: "User updated!"});
+  } catch(error) {
+    return res.status(500).json({error: error.message});
+  }
+
 });
 
 module.exports = router;
