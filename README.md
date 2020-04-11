@@ -77,10 +77,12 @@ You will also see any lint errors in the console.
   <li>Frontend
     <ul>
       <li>HTML5, CSS3, JavaScript</li>
+      <li>React</li>
       <li>React Bootstrap</li>
+      <li>Redux</li>
     </ul>
   </li>
 </ul>
 
 ## Next steps
-- Implement a signup/login page for user verification
+- Implement a chat feature that allows user to talk to each other
