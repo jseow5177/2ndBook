@@ -6,6 +6,7 @@ const bookSchema = new Schema({
   author: String,
   description: String,
   genre: String,
+  userId: String,
   image: {
     data: Buffer,
     contentType: String
@@ -13,7 +14,5 @@ const bookSchema = new Schema({
 }, {
   collection: "books"
 });
-
-//module.exports = mongoose.model('Book', bookSchema);
 
 module.exports = bookSchema;
