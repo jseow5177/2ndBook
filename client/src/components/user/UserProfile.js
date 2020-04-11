@@ -9,6 +9,7 @@ import { v1 as uuidv1 } from "uuid"; // Timestamp unique id
 
 function UserProfile(props) {
 
+  const [userInfo, setUserInfo] = useState({});
   const [userBooks, setUserBooks] = useState([]);
   const [bookNum, setBookNum] = useState(0);
   const [search, setSearch] = useState("");
@@ -24,8 +25,15 @@ function UserProfile(props) {
 
     if (isSubscribed) {
       axios.get("http://localhost:4000/users/" + props.match.params.id).then(res => {
-        setUserBooks(res.data);
-        setBookNum(res.data.length);
+        setUserInfo({
+          userId: res.data._id,
+          username: res.data.username,
+          bio: res.data.bio,
+          imageBuffer: res.data.image.data,
+          imageType: res.data.image.contentType
+        });
+        setUserBooks(res.data.books);
+        setBookNum(res.data.books.length);
       }).catch(error => {
         console.log(error.response.data);
       })
@@ -36,7 +44,7 @@ function UserProfile(props) {
 
   return (
     <div>
-      <ProfileSection bookNum={bookNum}/>
+      <ProfileSection userInfo={userInfo} bookNum={bookNum}/>
       <Search searchBy={searchBy} setSearchBy={setSearchBy} search={search} setSearch={setSearch}/>
       <Row className="card-deck">
         {filteredBooks.length === 0 ? <h1 className="no-results">No books found</h1> : null}
