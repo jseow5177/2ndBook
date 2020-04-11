@@ -3,7 +3,7 @@
 A book sharing web app built with the MERN (MondoDB, Express, React, Node) stack!
 
 ## Project Demo
-![app-demo](app-demo.gif)
+<a src="https://www.youtube.com/watch?v=sNkqTQHeZ2U&feature=youtu.be">Youtube</a>  
 
 ## Getting started
 
@@ -84,5 +84,13 @@ You will also see any lint errors in the console.
   </li>
 </ul>
 
+## App features
+<ol>
+  <li>User login, signup and authentication with JSON web token (JWT).</li>
+  <li>CRUD (Create, Read, Update and Delete) operations.</li>
+  <li>A user can view the profile of other users.</li>
+</ol>
+
 ## Next steps
-- Implement a chat feature that allows user to talk to each other
+- Implement a chat feature that allows user to talk to each other via web sockets
+- Improve API endpoints
