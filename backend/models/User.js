@@ -5,6 +5,10 @@ const bookSchema = require("../models/Book");
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
+  image: {
+    data: Buffer,
+    contentType: String
+  },
   username: {
     type: String,
     required: true
@@ -16,6 +20,9 @@ const userSchema = new Schema({
   email: {
     type: String,
     required: true
+  },
+  bio: {
+    type: String
   },
   books: [bookSchema] // A collection of books by user
 });
